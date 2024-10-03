@@ -29,62 +29,51 @@ using namespace std;
 // }
 
 
+// Función que calcula la orientación de tres puntos (producto cruz)
 int orientacion(float xa, float ya, float xb, float yb, float xc, float yc) {
-    // Calcula el producto cruz para la orientación de tres puntos (xa, ya), (xb, yb), (xc, yc)
-
     float orientation = (yb - ya) * (xc - xb) - (xb - xa) * (yc - yb);
-
-    // Si el producto cruz es 0, los puntos son colineales
     if (orientation == 0) {
-        return 0;
+        return 0;  // Colineales
     }
-
-    return (orientation > 0) ? 1 : 2;
+    return (orientation > 0) ? 1 : 2;  // 1: Sentido horario, 2: Sentido antihorario
 }
 
-bool esConvexo(vector<vector<int>> P) {
-    if (P.size() < 2) {
-        return false;
+// Función que verifica si un polígono es convexo
+bool esConvexo(const vector<vector<int>>& P) {
+    if (P.size() < 3) {
+        return false;  // Un polígono debe tener al menos 3 vértices
     }
 
-    vector<int> A;
-    vector<int> B;
-    vector<int> C;
+    int n = P.size();
+    int primera_orientacion = -1;  // Para almacenar la primera orientación encontrada
 
-    for (int i = 2; i <= P.size()+1; i++) {
-        A = P[i % P.size()];
-        B = P[(i + 1) % P.size()];
-        C = P[(i + 2) % P.size()];
+    for (int i = 0; i < n; i++) {
+        vector<int> A = P[i];
+        vector<int> B = P[(i + 1) % n];
+        vector<int> C = P[(i + 2) % n];
 
-        if (orientacion(A[0], A[1], B[0], B[1], C[0], C[1]) == 2) {
-            return false;
+        int orient = orientacion(A[0], A[1], B[0], B[1], C[0], C[1]);
+
+        if (orient != 0) {
+            if (primera_orientacion == -1) {
+                primera_orientacion = orient;  // Guardamos la primera orientación no colineal
+            } else if (orient != primera_orientacion) {
+                return false;  // Si las orientaciones difieren, no es convexo
+            }
         }
     }
-    
+
     return true;
-
 }
 
-
+// Función de prueba
 void test() {
-    vector<vector<int>> P = {{0, 0}, {1, 1}, {2, 2}, {2, 1}};
-    cout << esConvexo(P) << endl; // 1
-
-    // P = {{0, 0}, {0, 1}, {1, 1}, {1, 2}};
-    // cout << esConvexo(P) << endl; // 0
-
-    // P = {{0, 0}, {0, 1}, {1, 1}, {2, 1}, {2, 0}};
-    // cout << esConvexo(P) << endl; // 1
-
-    P = {{0, 0}, {0, 4}, {1, 4}, {2, 3}, {3, 2}, {4, 1}, {3, 0}, {2, 0}};
-    cout << esConvexo(P) << endl; // 1
+    vector<vector<int>> P = {{0, 0}, {4, 0}, {4, 3}, {0, 3}};  // Rectángulo
+    cout << (esConvexo(P) ? "Es convexo" : "No es convexo") << endl;
 }
-
 
 int main() {
-
     test();
     return 0;
 }
-
 
