@@ -39,18 +39,18 @@ int orientacion(float xa, float ya, float xb, float yb, float xc, float yc) {
 }
 
 // Función que verifica si un polígono es convexo
-bool esConvexo(const vector<vector<int>>& P) {
-    if (P.size() < 3) {
+bool esConvexo(const vector<vector<float>>& polygon) {
+    if (polygon.size() < 3) {
         return false;  // Un polígono debe tener al menos 3 vértices
     }
 
-    int n = P.size();
+    int n = polygon.size();
     int primera_orientacion = -1;  // Para almacenar la primera orientación encontrada
 
     for (int i = 0; i < n; i++) {
-        vector<int> A = P[i];
-        vector<int> B = P[(i + 1) % n];
-        vector<int> C = P[(i + 2) % n];
+        vector<float> A = polygon[i];
+        vector<float> B = polygon[(i + 1) % n];
+        vector<float> C = polygon[(i + 2) % n];
 
         int orient = orientacion(A[0], A[1], B[0], B[1], C[0], C[1]);
 
@@ -68,7 +68,12 @@ bool esConvexo(const vector<vector<int>>& P) {
 
 // Función de prueba
 void test() {
-    vector<vector<int>> P = {{0, 0}, {4, 0}, {4, 3}, {0, 3}};  // Rectángulo
+    vector<vector<float>> P = {{0, 0}, {4, 0}, {4, 3}, {0, 3}};  // Rectángulo
+    cout << (esConvexo(P) ? "Es convexo" : "No es convexo") << endl;
+    P = {{1, 1}, {8, 2}, {7.62, 6.16}, {2.66, 5.74}};  // Rectángulo
+    cout << (esConvexo(P) ? "Es convexo" : "No es convexo") << endl;
+
+    P = {{0, 0}, {4, 0}, {4, 3}, {2, 3}, {0, 3}};  // Trapecio
     cout << (esConvexo(P) ? "Es convexo" : "No es convexo") << endl;
 }
 

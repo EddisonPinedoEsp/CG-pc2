@@ -7,42 +7,35 @@ using namespace std;
 // Write a function that computes the area of a convex polygon.
 
 
-struct Point {
-    double x, y;
-
-    Point(double x, double y) : x(x), y(y) {}
-};
-
-// Función para calcular la orientación de tres puntos A, B, C
-int orientation(Point A, Point B, Point C) {
-    double cross_product = (B.y - A.y) * (C.x - B.x) - (B.x - A.x) * (C.y - B.y);
-
-    if (cross_product == 0) {
-        return 0;  // Los puntos son colineales
+// Función que calcula la orientación de tres puntos (producto cruz)
+int orientacion(float xa, float ya, float xb, float yb, float xc, float yc) {
+    float orientation = (yb - ya) * (xc - xb) - (xb - xa) * (yc - yb);
+    if (orientation == 0) {
+        return 0;  // Colineales
     }
-
-    return (cross_product > 0) ? 1 : 2;  // 1: Sentido horario, 2: Sentido antihorario
+    return (orientation > 0) ? 1 : 2;  // 1: Sentido horario, 2: Sentido antihorario
 }
 
-// Verifica si un polígono es convexo
-bool is_convex(const vector<Point>& polygon) {
+// Función que verifica si un polígono es convexo
+bool esConvexo(const vector<vector<float>>& polygon) {
     if (polygon.size() < 3) {
         return false;  // Un polígono debe tener al menos 3 vértices
     }
 
     int n = polygon.size();
-    int first_orientation = -1;
+    int primera_orientacion = -1;  // Para almacenar la primera orientación encontrada
 
     for (int i = 0; i < n; i++) {
-        Point A = polygon[i];
-        Point B = polygon[(i + 1) % n];
-        Point C = polygon[(i + 2) % n];
+        vector<float> A = polygon[i];
+        vector<float> B = polygon[(i + 1) % n];
+        vector<float> C = polygon[(i + 2) % n];
 
-        int orient = orientation(A, B, C);
+        int orient = orientacion(A[0], A[1], B[0], B[1], C[0], C[1]);
+
         if (orient != 0) {
-            if (first_orientation == -1) {
-                first_orientation = orient;  // Guarda la primera orientación no colineal
-            } else if (orient != first_orientation) {
+            if (primera_orientacion == -1) {
+                primera_orientacion = orient;  // Guardamos la primera orientación no colineal
+            } else if (orient != primera_orientacion) {
                 return false;  // Si las orientaciones difieren, no es convexo
             }
         }
@@ -50,39 +43,48 @@ bool is_convex(const vector<Point>& polygon) {
 
     return true;
 }
-
 // Función para calcular el área de un polígono usando la fórmula del zapato
-float polygon_area(const vector<Point>& polygon) {
+float polygon_area(const vector<vector<float>>& polygon) {
     if (polygon.size() < 3) {
         return 0;  // El área de un polígono con menos de 3 puntos es 0
     }
 
     // Verifica si el polígono es convexo
-    if (!is_convex(polygon)) {
+    if (!esConvexo(polygon)) {
         cout << "The polygon is not convex" << endl;
         return -1;
     }
 
+    float area = 0;
     int n = polygon.size();
-    double area = 0.0;
 
-    // Usamos la fórmula del zapato para calcular el área
     for (int i = 0; i < n; i++) {
-        int j = (i + 1) % n;
-        area += polygon[i].x * polygon[j].y - polygon[j].x * polygon[i].y;
+        float x1 = polygon[i][0];
+        float y1 = polygon[i][1];
+        float x2 = polygon[(i + 1) % n][0];
+        float y2 = polygon[(i + 1) % n][1];
+
+        area += (x1 * y2) - (x2 * y1);
     }
 
-    return abs(area) / 2.0;
+    area = abs(area) / 2.0;
+    return area;
 }
 
 // Función de prueba
 void test() {
     // Definir un polígono regular (rectángulo en este caso)
-    vector<Point> polygon = {{0, 0}, {4, 0}, {4, 3}, {0, 3}};  // Rectángulo
+    vector<vector<float>> polygon = {{0, 0}, {4, 0}, {4, 3}, {0, 3}};  // Rectángulo
 
     float area = polygon_area(polygon);
     if (area != -1) {
         cout << "Area: " << area << endl;
+    }
+
+    polygon = {{1, 1}, {8, 2}, {7.62, 6.16}, {2.66, 5.74}};
+    float area1 = polygon_area(polygon);
+    if (area1 != -1) {
+        cout << "Area: " << area1 << endl;
     }
 }
 
