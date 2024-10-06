@@ -6,27 +6,29 @@
 
 using namespace std;
 
-// A utility function to find the distance between two points
+// Funcion calcula la distancia entre dos puntos
 double dist(const vector<float>& p1, const vector<float>& p2) {
+    // Usa la fórmula de la distancia entre dos puntos
     return sqrt((p1[0] - p2[0]) * (p1[0] - p2[0]) +
                 (p1[1] - p2[1]) * (p1[1] - p2[1]));
 }
 
-// A utility function to find the distance between the closest points of strip of given size. All points in strip[] are sorted according to y coordinate. They all have an upper bound on minimum distance as d.
-double stripClosest(vector<vector<float>>& strip, double d, pair<vector<float>, vector<float>>& closestPair) {
-    double min = d; // Initialize the minimum distance as d
+// Calcula la distancia más pequeña entre dos puntos de un conjunto de puntos
+double segmentoCerca(vector<vector<float>>& segmento, double d, pair<vector<float>, vector<float>>& puntosCerca) {
+    double min = d;
 
-    sort(strip.begin(), strip.end(), [](const vector<float>& p1, const vector<float>& p2) {
+    // Ordena los puntos
+    sort(segmento.begin(), segmento.end(), [](const vector<float>& p1, const vector<float>& p2) {
         return p1[1] < p2[1];
     });
 
-    // Pick all points one by one and try the next points till the difference between y coordinates is smaller than d.
-    for (size_t i = 0; i < strip.size(); ++i) {
-        for (size_t j = i + 1; j < strip.size() && (strip[j][1] - strip[i][1]) < min; ++j) {
-            double distance = dist(strip[i], strip[j]);
+    // Compara todos los puntos en el segmento
+    for (size_t i = 0; i < segmento.size(); ++i) {
+        for (size_t j = i + 1; j < segmento.size() && (segmento[j][1] - segmento[i][1]) < min; ++j) {
+            double distance = dist(segmento[i], segmento[j]);
             if (distance < min) {
                 min = distance;
-                closestPair = {strip[i], strip[j]};
+                puntosCerca = {segmento[i], segmento[j]};
             }
         }
     }
@@ -34,9 +36,9 @@ double stripClosest(vector<vector<float>>& strip, double d, pair<vector<float>, 
     return min;
 }
 
-// A recursive function to find the smallest distance. The array P contains all points sorted according to x coordinate
-double closestUtil(vector<vector<float>>& P, size_t n, pair<vector<float>, vector<float>>& closestPair) {
-    // If there are 2 or 3 points, then use brute force
+// Función auxiliar para encontrar la distancia más pequeña entre dos puntos
+double masCerca(vector<vector<float>>& P, size_t n, pair<vector<float>, vector<float>>& puntosCerca) {
+    // Si hay mas de 3 puntos, se resuelve por fuerza bruta
     if (n <= 3) {
         double min = DBL_MAX;
         for (size_t i = 0; i < n; ++i) {
@@ -44,60 +46,60 @@ double closestUtil(vector<vector<float>>& P, size_t n, pair<vector<float>, vecto
                 double distance = dist(P[i], P[j]);
                 if (distance < min) {
                     min = distance;
-                    closestPair = {P[i], P[j]};
+                    puntosCerca = {P[i], P[j]};
                 }
             }
         }
         return min;
     }
 
-    // Find the middle point
+    // Busca el punto medio
     size_t mid = n / 2;
     vector<float> midPoint = P[mid];
 
-    // Consider the vertical line passing through the middle point calculate the smallest distance dl on left of middle point and dr on right side
+    // Encuentra la distancia más pequeña en la mitad izquierda y derecha del conjunto de puntos
     pair<vector<float>, vector<float>> leftPair, rightPair;
-    double dl = closestUtil(P, mid, leftPair);
-    double dr = closestUtil(P, n - mid, rightPair);
+    double dl = masCerca(P, mid, leftPair);
+    double dr = masCerca(P, n - mid, rightPair);
 
-    // Find the smaller of two distances
+    // Encuentra la distancia más pequeña entre los puntos de la mitad izquierda y derecha
     double d = min(dl, dr);
-    closestPair = (dl < dr) ? leftPair : rightPair;
+    puntosCerca = (dl < dr) ? leftPair : rightPair;
 
-    // Build an array strip[] that contains points close (closer than d) to the line passing through the middle point
-    vector<vector<float>> strip;
+    // Crea un segmento de puntos que están a una distancia menor que d del punto medio
+    vector<vector<float>> segmento;
     for (size_t i = 0; i < n; i++) {
         if (abs(P[i][0] - midPoint[0]) < d) {
-            strip.push_back(P[i]);
+            segmento.push_back(P[i]);
         }
     }
 
-    // Find the closest points in strip. Return the minimum of d and closest distance in strip[]
-    double stripDist = stripClosest(strip, d, closestPair);
-    if (stripDist < d) {
-        d = stripDist;
+    // Encuentra la distancia más pequeña en el segmento
+    double segmentoDist = segmentoCerca(segmento, d, puntosCerca);
+    if (segmentoDist < d) {
+        d = segmentoDist;
     }
 
     return d;
 }
 
-// The main function that finds the smallest distance
-pair<vector<float>, vector<float>> closest(vector<vector<float>>& P) {
+// Función para encontrar la distancia más pequeña entre dos puntos
+pair<vector<float>, vector<float>> cerca(vector<vector<float>>& P) {
     size_t n = P.size();
     sort(P.begin(), P.end(), [](const vector<float>& p1, const vector<float>& p2) {
         return p1[0] < p2[0];
     });
 
-    pair<vector<float>, vector<float>> closestPair;
-    closestUtil(P, n, closestPair);
-    return closestPair;
+    pair<vector<float>, vector<float>> puntosCerca;
+    masCerca(P, n, puntosCerca);
+    return puntosCerca;
 }
 
 int main() {
     vector<vector<float>> P = {{2, 3}, {12, 30}, {40, 50}, {5, 1}, {12, 10}, {3, 4}};
-    pair<vector<float>, vector<float>> closestPair = closest(P);
-    cout << "The closest pair of points are: (" << closestPair.first[0] << ", " << closestPair.first[1] << ") and ("
-         << closestPair.second[0] << ", " << closestPair.second[1] << ")" << endl;
+    pair<vector<float>, vector<float>> puntosCerca = cerca(P);
+    cout << "The cerca pair of points are: (" << puntosCerca.first[0] << ", " << puntosCerca.first[1] << ") and ("
+         << puntosCerca.second[0] << ", " << puntosCerca.second[1] << ")" << endl;
     return 0;
 }
 

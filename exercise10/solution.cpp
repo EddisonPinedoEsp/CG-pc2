@@ -3,7 +3,7 @@
 
 using namespace std;
 
-// Helper function to calculate factorial
+// Funncion para calcular el factorial de un número
 unsigned long long factorial(int n) {
     if (n == 0 || n == 1) return 1;
     unsigned long long result = 1;
@@ -13,29 +13,29 @@ unsigned long long factorial(int n) {
     return result;
 }
 
-// Function to calculate the nth Catalan number
+// Usamos la fórmula de la función de Catalan para calcular el n-ésimo número de Catalan
 unsigned long long catalan(int n) {
     return factorial(2 * n) / (factorial(n + 1) * factorial(n));
 }
 
-// Function to calculate the number of triangulations for a given polygon
-int numberOfTriangulations(vector<vector<float>> polygon) {
-    int n = polygon.size();
+// Fnunción para calcular el número de triangulaciones de un polígono
+int numeroTriangulaciones(vector<vector<float>> poligono) {
+    int n = poligono.size();
 
-    // A polygon must have at least 3 sides for triangulation
+    // El polígono debe tener al menos 3 lados para la triangulación
     if (n < 3) {
-        cerr << "A polygon must have at least 3 sides for triangulation!" << endl;
+        cerr << "Un polígono debe tener al menos 3 lados" << endl;
         return 0;
     }
 
-    // The number of triangulations for a polygon with n sides is the (n-2)th Catalan number
+    // Aplicamos la fórmula de la función de Catalan para calcular el número de triangulaciones
     return catalan(n - 2);
 }
 
 int main() {
-    // Example usage with a polygon of 6 vertices
-    vector<vector<float>> polygon = {{0, 0}, {1, 0}, {1, 1}, {0.5, 1.5}, {0, 1}, {-0.5, 0.5}};
-    cout << "Number of triangulations: " << numberOfTriangulations(polygon) << endl;
+
+    vector<vector<float>> poligono = {{0, 0}, {1, 0}, {1, 1}, {0.5, 1.5}, {0, 1}, {-0.5, 0.5}};
+    cout << "Numero de triangulaciones : " << numeroTriangulaciones(poligono) << endl;
 
     return 0;
 }

@@ -1,4 +1,3 @@
-
 #include<iostream>
 #include<vector>
 #include<algorithm>
@@ -7,37 +6,34 @@
 
 using namespace std;
 
-// Write a function that computes the area of the intersection of two convex polygons
-// Función que calcula la orientación de tres puntos (producto cruz)
 int orientacion(float xa, float ya, float xb, float yb, float xc, float yc) {
     float orientation = (yb - ya) * (xc - xb) - (xb - xa) * (yc - yb);
     if (orientation == 0) {
-        return 0;  // Colineales
+        return 0;
     }
-    return (orientation > 0) ? 1 : 2;  // 1: Sentido horario, 2: Sentido antihorario
+    return (orientation > 0) ? 1 : 2;
 }
 
-// Función que verifica si un polígono es convexo
-bool esConvexo(const vector<vector<float>>& polygon) {
-    if (polygon.size() < 3) {
-        return false;  // Un polígono debe tener al menos 3 vértices
+bool esConvexo(const vector<vector<float>>& poligono) {
+    if (poligono.size() < 3) {
+        return false;
     }
 
-    int n = polygon.size();
-    int primera_orientacion = -1;  // Para almacenar la primera orientación encontrada
+    int n = poligono.size();
+    int primera_orientacion = -1; 
 
     for (int i = 0; i < n; i++) {
-        vector<float> A = polygon[i];
-        vector<float> B = polygon[(i + 1) % n];
-        vector<float> C = polygon[(i + 2) % n];
+        vector<float> A = poligono[i];
+        vector<float> B = poligono[(i + 1) % n];
+        vector<float> C = poligono[(i + 2) % n];
 
         int orient = orientacion(A[0], A[1], B[0], B[1], C[0], C[1]);
 
         if (orient != 0) {
             if (primera_orientacion == -1) {
-                primera_orientacion = orient;  // Guardamos la primera orientación no colineal
+                primera_orientacion = orient;
             } else if (orient != primera_orientacion) {
-                return false;  // Si las orientaciones difieren, no es convexo
+                return false;
             }
         }
     }
@@ -45,7 +41,7 @@ bool esConvexo(const vector<vector<float>>& polygon) {
     return true;
 }
 
-bool point_in_polygon(const vector<vector<float>>& P, const vector<float>& A) {
+bool punto_en_poligono(const vector<vector<float>>& P, const vector<float>& A) {
     int n = P.size();
     bool inside = false;
     for (int i = 0, j = n - 1; i < n; j = i++) {
@@ -57,30 +53,28 @@ bool point_in_polygon(const vector<vector<float>>& P, const vector<float>& A) {
     return inside;
 }
 
-vector<vector<float>> jarvis_march(vector<vector<float>> points) {
-    int n = points.size();
-    if (n < 3) return {};  // No se puede formar una envolvente convexa con menos de 3 puntos
+vector<vector<float>> jarvis_march(vector<vector<float>> puntos) {
+    int n = puntos.size();
+    if (n < 3) return {};
 
     vector<vector<float>> hull;
 
-    // Encuentra el punto más a la izquierda
-    int leftmost = 0;
+    int masInquierda = 0;
     for (int i = 1; i < n; i++) {
-        if (points[i][0] < points[leftmost][0]) {
-            leftmost = i;
+        if (puntos[i][0] < puntos[masInquierda][0]) {
+            masInquierda = i;
         }
     }
 
-    // Realiza el algoritmo de Jarvis March
-    int p = leftmost, q;
+    int p = masInquierda, q;
     do {
         // Añade el punto actual a la envolvente
-        hull.push_back(points[p]);
+        hull.push_back(puntos[p]);
 
         // Encuentra el punto más "a la izquierda" de todos los demás con respecto a p
         q = (p + 1) % n;
         for (int i = 0; i < n; i++) {
-            if (orientacion(points[p][0], points[p][1], points[i][0], points[i][1],points[q][0], points[q][1]) == 2) {
+            if (orientacion(puntos[p][0], puntos[p][1], puntos[i][0], puntos[i][1],puntos[q][0], puntos[q][1]) == 2) {
                 q = i;
             }
         }
@@ -88,13 +82,13 @@ vector<vector<float>> jarvis_march(vector<vector<float>> points) {
         // Mueve al siguiente punto
         p = q;
 
-    } while (p != leftmost);  // Se detiene cuando volvemos al punto inicial
+    } while (p != masInquierda);  // Se detiene cuando volvemos al punto inicial
 
     return hull;
 }
 
 // Función que calcula el punto de intersección entre dos segmentos si existe
-bool intersect_segment(const vector<float>& A, const vector<float>& B, const vector<float>& C, const vector<float>& D, vector<float>& intersection) {
+bool interseccion(const vector<float>& A, const vector<float>& B, const vector<float>& C, const vector<float>& D, vector<float>& intersec) {
     float a1 = B[1] - A[1];
     float b1 = A[0] - B[0];
     float c1 = a1 * A[0] + b1 * A[1];
@@ -105,17 +99,18 @@ bool intersect_segment(const vector<float>& A, const vector<float>& B, const vec
 
     float det = a1 * b2 - a2 * b1;
 
+    // fabs(): devuelve el valor absoluto de un número
     if (fabs(det) < 1e-10) {
-        return false;  // Los segmentos son paralelos o coincidentes
+        return false;
     } else {
-        intersection[0] = (b2 * c1 - b1 * c2) / det;
-        intersection[1] = (a1 * c2 - a2 * c1) / det;
+        intersec[0] = (b2 * c1 - b1 * c2) / det;
+        intersec[1] = (a1 * c2 - a2 * c1) / det;
 
         // Verificamos que la intersección esté en ambos segmentos
-        if (min(A[0], B[0]) <= intersection[0] && intersection[0] <= max(A[0], B[0]) &&
-            min(A[1], B[1]) <= intersection[1] && intersection[1] <= max(A[1], B[1]) &&
-            min(C[0], D[0]) <= intersection[0] && intersection[0] <= max(C[0], D[0]) &&
-            min(C[1], D[1]) <= intersection[1] && intersection[1] <= max(C[1], D[1])) {
+        if (min(A[0], B[0]) <= intersec[0] && intersec[0] <= max(A[0], B[0]) &&
+            min(A[1], B[1]) <= intersec[1] && intersec[1] <= max(A[1], B[1]) &&
+            min(C[0], D[0]) <= intersec[0] && intersec[0] <= max(C[0], D[0]) &&
+            min(C[1], D[1]) <= intersec[1] && intersec[1] <= max(C[1], D[1])) {
             return true;
         }
     }
@@ -124,61 +119,61 @@ bool intersect_segment(const vector<float>& A, const vector<float>& B, const vec
 }
 
 // Función principal que calcula los puntos en la intersección de dos polígonos convexos
-vector<vector<float>> the_points_of_intersection(vector<vector<float>> polygon1, vector<vector<float>> polygon2) {
-    vector<vector<float>> intersection_points;
+vector<vector<float>> puntos_de_interseccion(vector<vector<float>> poligono1, vector<vector<float>> poligono2) {
+    vector<vector<float>> inter_puntos;
 
-    if (polygon1.size() < 3 || polygon2.size() < 3) {
-        return intersection_points;  // No hay intersección si hay menos de 3 puntos
+    if (poligono1.size() < 3 || poligono2.size() < 3) {
+        return inter_puntos;  // No hay intersección si hay menos de 3 puntos
     }
 
     // Verifica si los polígonos son convexos
-    if (!esConvexo(polygon1) || !esConvexo(polygon2)) {
-        cout << "One of the polygons is not convex" << endl;
+    if (!esConvexo(poligono1) || !esConvexo(poligono2)) {
+        cout << "One of the poligonos is not convex" << endl;
         return {};
     }
 
     // Verifica intersecciones de los lados de los polígonos
-    for (int i = 0; i < polygon1.size(); i++) {
-        vector<float> A = polygon1[i];
-        vector<float> B = polygon1[(i + 1) % polygon1.size()];
+    for (int i = 0; i < poligono1.size(); i++) {
+        vector<float> A = poligono1[i];
+        vector<float> B = poligono1[(i + 1) % poligono1.size()];
 
-        for (int j = 0; j < polygon2.size(); j++) {
-            vector<float> C = polygon2[j];
-            vector<float> D = polygon2[(j + 1) % polygon2.size()];
+        for (int j = 0; j < poligono2.size(); j++) {
+            vector<float> C = poligono2[j];
+            vector<float> D = poligono2[(j + 1) % poligono2.size()];
 
-            vector<float> intersection(2);
-            if (intersect_segment(A, B, C, D, intersection)) {
-                intersection_points.push_back(intersection);
+            vector<float> intersec(2);
+            if (interseccion(A, B, C, D, intersec)) {
+                inter_puntos.push_back(intersec);
             }
         }
     }
 
     // Añade puntos del polígono 1 dentro del polígono 2
-    for (auto& point : polygon1) {
-        if (point_in_polygon(polygon2, point)) {
-            intersection_points.push_back(point);
+    for (auto& punto : poligono1) {
+        if (punto_en_poligono(poligono2, punto)) {
+            inter_puntos.push_back(punto);
         }
     }
 
     // Añade puntos del polígono 2 dentro del polígono 1
-    for (auto& point : polygon2) {
-        if (point_in_polygon(polygon1, point)) {
-            intersection_points.push_back(point);
+    for (auto& punto : poligono2) {
+        if (punto_en_poligono(poligono1, punto)) {
+            inter_puntos.push_back(punto);
         }
     }
 
     // Convierte los puntos a una envolvente convexa
-    return jarvis_march(intersection_points);
+    return jarvis_march(inter_puntos);
 }
 
 // Función para calcular el área de un polígono dado sus puntos (Fórmula de Shoelace)
-float calcular_area(const vector<vector<float>>& polygon) {
+float calcular_area(const vector<vector<float>>& poligono) {
     float area = 0;
-    int n = polygon.size();
+    int n = poligono.size();
 
     for (int i = 0; i < n; i++) {
         int j = (i + 1) % n;
-        area += polygon[i][0] * polygon[j][1] - polygon[j][0] * polygon[i][1];
+        area += poligono[i][0] * poligono[j][1] - poligono[j][0] * poligono[i][1];
     }
 
     return fabs(area) / 2.0;
@@ -190,7 +185,7 @@ void test() {
     vector<vector<float>> polygon1 = { {0, 0}, {4, 0}, {4, 4}, {0, 4} };
     vector<vector<float>> polygon2 = { {2, 2}, {6, 2}, {6, 6}, {2, 6} };
 
-    vector<vector<float>> puntos_interseccion = the_points_of_intersection(polygon1, polygon2);
+    vector<vector<float>> puntos_interseccion = puntos_de_interseccion(polygon1, polygon2);
 
     if (!puntos_interseccion.empty()) {
         float area = calcular_area(puntos_interseccion);
