@@ -5,106 +5,102 @@
 
 using namespace std;
 
-// Definición de la estructura Point
-struct Point {
+struct Punto {
     int x, y;
-    bool operator<(const Point& other) const {
-        return tie(x, y) < tie(other.x, other.y);
+    bool operator<(const Punto& otro) const {
+        return tie(x, y) < tie(otro.x, otro.y);
     }
 };
 
-// Definición de la estructura Segment
-struct Segment {
-    Point p1, p2;
-    Segment(Point a, Point b) : p1(a), p2(b) {
-        if (p2 < p1) swap(p1, p2);  // Ensure p1 is the left endpoint
+struct Segmento {
+    Punto p1, p2;
+    Segmento(Punto a, Punto b) : p1(a), p2(b) {
+        if (p2 < p1) swap(p1, p2); 
     }
 };
 
-// Definición de la estructura Event
 struct Event {
     int x;
-    bool isStart;
-    Segment* segment;
+    bool esComienso;
+    Segmento* segmento;
     
-    bool operator<(const Event& other) const {
-        if (x != other.x)
-            return x < other.x;
-        return isStart > other.isStart;  // Start event comes before end event if equal x
+    bool operator<(const Event& otro) const {
+        if (x != otro.x)
+            return x < otro.x;
+        return esComienso > otro.esComienso;
     }
 };
 
-// Mock function to simulate detectIntersections behavior for testing
-bool detectIntersections(vector<Segment>& segments);
+bool detectarInterseccion(vector<Segmento>& Segmentos);
 
 TEST(DetectIntersectionsTest, NoIntersections) {
-    vector<Segment> segments = {
-        Segment({0, 0}, {1, 1}),
-        Segment({2, 2}, {3, 3})
+    vector<Segmento> Segmentos = {
+        Segmento({0, 0}, {1, 1}),
+        Segmento({2, 2}, {3, 3})
     };
-    bool result = detectIntersections(segments);
+    bool result = detectarInterseccion(Segmentos);
     cout << "NoIntersections: " << (result ? "true" : "false") << endl;
     EXPECT_FALSE(result);
 }
 
 TEST(DetectIntersectionsTest, OneIntersection) {
-    vector<Segment> segments = {
-        Segment({0, 0}, {2, 2}),
-        Segment({0, 2}, {2, 0})
+    vector<Segmento> Segmentos = {
+        Segmento({0, 0}, {2, 2}),
+        Segmento({0, 2}, {2, 0})
     };
-    bool result = detectIntersections(segments);
+    bool result = detectarInterseccion(Segmentos);
     cout << "OneIntersection: " << (result ? "true" : "false") << endl;
     EXPECT_TRUE(result);
 }
 
 TEST(DetectIntersectionsTest, MultipleIntersections) {
-    vector<Segment> segments = {
-        Segment({0, 0}, {3, 3}),
-        Segment({0, 3}, {3, 0}),
-        Segment({1, 0}, {1, 3})
+    vector<Segmento> segmentos = {
+        Segmento({0, 0}, {3, 3}),
+        Segmento({0, 3}, {3, 0}),
+        Segmento({1, 0}, {1, 3})
     };
-    bool result = detectIntersections(segments);
+    bool result = detectarInterseccion(segmentos);
     cout << "MultipleIntersections: " << (result ? "true" : "false") << endl;
     EXPECT_TRUE(result);
 }
 
-TEST(DetectIntersectionsTest, CollinearSegments) {
-    vector<Segment> segments = {
-        Segment({0, 0}, {2, 2}),
-        Segment({1, 1}, {3, 3})
+TEST(DetectIntersectionsTest, CollinearSegmentos) {
+    vector<Segmento> segmentos = {
+        Segmento({0, 0}, {2, 2}),
+        Segmento({1, 1}, {3, 3})
     };
-    bool result = detectIntersections(segments);
-    cout << "CollinearSegments: " << (result ? "true" : "false") << endl;
+    bool result = detectarInterseccion(segmentos);
+    cout << "CollinearSegmentos: " << (result ? "true" : "false") << endl;
     EXPECT_TRUE(result);
 }
 
-TEST(DetectIntersectionsTest, TouchingEndpoints) {
-    vector<Segment> segments = {
-        Segment({0, 0}, {2, 2}),
-        Segment({2, 2}, {3, 3})
+TEST(DetectIntersectionsTest, TouchingEndPuntos) {
+    vector<Segmento> segmentos = {
+        Segmento({0, 0}, {2, 2}),
+        Segmento({2, 2}, {3, 3})
     };
-    bool result = detectIntersections(segments);
-    cout << "TouchingEndpoints: " << (result ? "true" : "false") << endl;
+    bool result = detectarInterseccion(segmentos);
+    cout << "TouchingEndPuntos: " << (result ? "true" : "false") << endl;
     EXPECT_TRUE(result);
 }
 
-TEST(DetectIntersectionsTest, ParallelSegments) {
-    vector<Segment> segments = {
-        Segment({0, 0}, {2, 2}),
-        Segment({0, 1}, {2, 3})
+TEST(DetectIntersectionsTest, ParallelSegmentos) {
+    vector<Segmento> segmentos = {
+        Segmento({0, 0}, {2, 2}),
+        Segmento({0, 1}, {2, 3})
     };
-    bool result = detectIntersections(segments);
-    cout << "ParallelSegments: " << (result ? "true" : "false") << endl;
+    bool result = detectarInterseccion(segmentos);
+    cout << "ParallelSegmentos: " << (result ? "true" : "false") << endl;
     EXPECT_FALSE(result);
 }
 
 TEST(DetectIntersectionsTest, GivenCase) {
-    vector<Segment> segments = {
-        Segment({0, 0}, {4, 4}),
-        Segment({1, 5}, {5, 1}),
-        Segment({1, 1}, {5, 5})
+    vector<Segmento> segmentos = {
+        Segmento({0, 0}, {4, 4}),
+        Segmento({1, 5}, {5, 1}),
+        Segmento({1, 1}, {5, 5})
     };
-    bool result = detectIntersections(segments);
+    bool result = detectarInterseccion(segmentos);
     cout << "GivenCase: " << (result ? "true" : "false") << endl;
     EXPECT_TRUE(result);
 }
