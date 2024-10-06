@@ -4,9 +4,9 @@
 
 using namespace std;
 
-// Given a line L ∈ R3 , specified by one point P1 ∈ L and one direction d = (dx, dy, dz), compute the distance from a point P = (Px, Py, Pz) to L.
-
-float distance_from_point_to_line(vector<float> P1, vector<float> d, vector<float> P) {
+// Función que calcula la distancia entre un punto y una recta
+float distacia_punto_recta(vector<float> P1, vector<float> d, vector<float> P) {
+    // Usa la fórmula de la distancia entre un punto y una recta
     float x = P[0] - P1[0];
     float y = P[1] - P1[1];
     float z = P[2] - P1[2];
@@ -24,6 +24,6 @@ int main() {
     vector<float> P1 = {-1, 2, 3};
     vector<float> d = {3, 1, -2};
     vector<float> P = {1, -4, 3};
-    cout << distance_from_point_to_line(P1, d, P) << endl;
+    cout << distacia_punto_recta(P1, d, P) << endl;
     return 0;
 }

@@ -1,12 +1,8 @@
-// Write a function that receives 4 points (given by their coordinates) a = (xa, ya), b = (xb, yb), c = (xc, yc), d = (xd, yd), and returns true if and only ab ∩ cd != ∅.
 # include <iostream>
-
 using namespace std;
 
-
 int orientacion(float xa, float ya, float xb, float yb, float xc, float yc) {
-    // Calcula el producto cruz para la orientación de tres puntos (xa, ya), (xb, yb), (xc, yc)
-
+    // Calcula el producto cruz para la orientación de tres puntos
     float orientation = (yb - ya) * (xc - xb) - (xb - xa) * (yc - yb);
 
     // Si el producto cruz es 0, los puntos son colineales
@@ -18,8 +14,6 @@ int orientacion(float xa, float ya, float xb, float yb, float xc, float yc) {
 }
 
 bool enSegmento(float xa, float ya, float xb, float yb, float xc, float yc) {
-    // Verifica si el punto (xc, yc) está en el segmento (xa, ya) - (xb, yb)
-
     if (xc >= min(xa, xb) && xc <= max(xa, xb) && yc >= min(ya, yb) && yc <= max(ya, yb)) {
         return true;
     }
@@ -38,18 +32,23 @@ bool intersecion(float xa, float ya, float xb, float yb, float xc, float yc, flo
     if (o1 != o2 && o3 != o4) {
         return true;
     }
+    // Casos especiales
+    // xa, ya y xb, yb son colineales y xc, yc está en el segmento
     if (o1 == 0 && enSegmento(xa, ya, xb, yb, xc, yc)) {
         return true;
     }
 
+    // xa, ya y xb, yb son colineales y xd, yd está en el segmento
     if (o2 == 0 && enSegmento(xa, ya, xb, yb, xd, yd)) {
         return true;
     }
 
+    // xc, yc y xd, yd son colineales y xa, ya está en el segmento
     if (o3 == 0 && enSegmento(xc, yc, xd, yd, xa, ya)) {
         return true;
     }
 
+    // xc, yc y xd, yd son colineales y xb, yb está en el segmento
     if (o4 == 0 && enSegmento(xc, yc, xd, yd, xb, yb)) {
         return true;
     }

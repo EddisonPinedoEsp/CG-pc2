@@ -4,24 +4,23 @@
 
 using namespace std;
 
-// Given a triangle T ∈ R2 (given by its vertices) and an input point P, decide if P ∈ T.
-
 // Función para calcular el área con signo de un triángulo dado por sus vértices
-double signed_triangle_area(const vector<float>& a, const vector<float>& b, const vector<float>& c) {
+double signo_area_triangulo(const vector<float>& a, const vector<float>& b, const vector<float>& c) {
     return (a[0] * b[1] - a[1] * b[0] + a[1] * c[0] - a[0] * c[1] + b[0] * c[1] - c[0] * b[1]) / 2.0;
 }
 
 // Función para verificar si los puntos están en sentido horario
-bool cw(const vector<float>& a, const vector<float>& b, const vector<float>& c) {
+bool sentido_horario(const vector<float>& a, const vector<float>& b, const vector<float>& c) {
     const double EPSILON = 1e-9;
-    return signed_triangle_area(a, b, c) < -EPSILON;
+    return signo_area_triangulo(a, b, c) < -EPSILON;
 }
 
 // Función para verificar si el punto P está dentro del triángulo T
-bool point_in_triangle(const vector<vector<float>>& T, const vector<float>& P) {
-    if (cw(T[0], T[1], P)) return false;
-    if (cw(T[1], T[2], P)) return false;
-    if (cw(T[2], T[0], P)) return false;
+bool punto_en_triangulo(const vector<vector<float>>& T, const vector<float>& P) {
+    // Verifica si el punto P está en el mismo sentido que los vértices del triángulo
+    if (sentido_horario(T[0], T[1], P)) return false;
+    if (sentido_horario(T[1], T[2], P)) return false;
+    if (sentido_horario(T[2], T[0], P)) return false;
     return true;
 }
 
@@ -43,26 +42,24 @@ void test() {
     vector<float> P = {3.90543,3.36388};
 
 
-    cout << " Ponit D " <<point_in_triangle(T, D) << endl;
-    cout << " Ponit E " <<point_in_triangle(T, E) << endl;
-    cout << " Ponit F " <<point_in_triangle(T, F) << endl;
-    cout << " Ponit G " <<point_in_triangle(T, G) << endl;
-    cout << " Ponit H " <<point_in_triangle(T, H) << endl;
-    cout << " Ponit I " <<point_in_triangle(T, I) << endl;
-    cout << " Ponit J " <<point_in_triangle(T, J) << endl;
-    cout << " Ponit K " <<point_in_triangle(T, K) << endl;
-    cout << " Ponit L " <<point_in_triangle(T, L) << endl;
-    cout << " Ponit M " <<point_in_triangle(T, M) << endl;
-    cout << " Ponit N " <<point_in_triangle(T, N) << endl;
-    cout << " Ponit O " <<point_in_triangle(T, O) << endl;
-    cout << " Ponit P " <<point_in_triangle(T, P) << endl;
+    cout << " Ponit D " <<punto_en_triangulo(T, D) << endl;
+    cout << " Ponit E " <<punto_en_triangulo(T, E) << endl;
+    cout << " Ponit F " <<punto_en_triangulo(T, F) << endl;
+    cout << " Ponit G " <<punto_en_triangulo(T, G) << endl;
+    cout << " Ponit H " <<punto_en_triangulo(T, H) << endl;
+    cout << " Ponit I " <<punto_en_triangulo(T, I) << endl;
+    cout << " Ponit J " <<punto_en_triangulo(T, J) << endl;
+    cout << " Ponit K " <<punto_en_triangulo(T, K) << endl;
+    cout << " Ponit L " <<punto_en_triangulo(T, L) << endl;
+    cout << " Ponit M " <<punto_en_triangulo(T, M) << endl;
+    cout << " Ponit N " <<punto_en_triangulo(T, N) << endl;
+    cout << " Ponit O " <<punto_en_triangulo(T, O) << endl;
+    cout << " Ponit P " <<punto_en_triangulo(T, P) << endl;
 }
 
 
 
 int main() {
-
-
     test();
     return 0;
 }
