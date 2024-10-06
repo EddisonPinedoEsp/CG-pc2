@@ -20,4 +20,34 @@ set(SRC1_FILES ../exercise03/solution.cpp ../exercise03/test.cpp)
 add_executable(runTests3 ${SRC1_FILES})
 target_link_libraries(runTests3 gtest gtest_main)
 
+# Ejecutable de prueba para exercise02
+set(SRC1_FILES ../exercise04/solution.cpp ../exercise04/test.cpp)
+add_executable(runTests4 ${SRC1_FILES})
+target_link_libraries(runTests4 gtest gtest_main)
+
+# Ejecutable de prueba para exercise02
+set(SRC1_FILES ../exercise05/solution.cpp ../exercise05/test.cpp)
+add_executable(runTests5 ${SRC1_FILES})
+target_link_libraries(runTests5 gtest gtest_main)
+
+# Ejecutable de prueba para exercise02
+set(SRC1_FILES ../exercise08/solution.cpp ../exercise08/test.cpp)
+add_executable(runTests8 ${SRC1_FILES})
+target_link_libraries(runTests8 gtest gtest_main)
+
+# Ejecutable de prueba para exercise02
+set(SRC1_FILES ../exercise10/solution.cpp ../exercise10/test.cpp)
+add_executable(runTests10 ${SRC1_FILES})
+target_link_libraries(runTests10 gtest gtest_main)
+
+# Ejecutable de prueba para exercise02
+set(SRC1_FILES ../exercise11/solution.cpp ../exercise11/test.cpp)
+add_executable(runTests11 ${SRC1_FILES})
+target_link_libraries(runTests11 gtest gtest_main)
+
+# Ejecutable de prueba para exercise02
+set(SRC1_FILES ../exercise12/solution.cpp ../exercise12/test.cpp)
+add_executable(runTests12 ${SRC1_FILES})
+target_link_libraries(runTests12 gtest gtest_main)
+
 

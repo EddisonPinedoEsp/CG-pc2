@@ -31,11 +31,3 @@ int numeroTriangulaciones(vector<vector<float>> poligono) {
     // Aplicamos la fórmula de la función de Catalan para calcular el número de triangulaciones
     return catalan(n - 2);
 }
-
-int main() {
-
-    vector<vector<float>> poligono = {{0, 0}, {1, 0}, {1, 1}, {0.5, 1.5}, {0, 1}, {-0.5, 0.5}};
-    cout << "Numero de triangulaciones : " << numeroTriangulaciones(poligono) << endl;
-
-    return 0;
-}

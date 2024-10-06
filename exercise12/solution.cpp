@@ -178,27 +178,3 @@ float calcular_area(const vector<vector<float>>& poligono) {
 
     return fabs(area) / 2.0;
 }
-
-
-void test() {
-
-    vector<vector<float>> polygon1 = { {0, 0}, {4, 0}, {4, 4}, {0, 4} };
-    vector<vector<float>> polygon2 = { {2, 2}, {6, 2}, {6, 6}, {2, 6} };
-
-    vector<vector<float>> puntos_interseccion = puntos_de_interseccion(polygon1, polygon2);
-
-    if (!puntos_interseccion.empty()) {
-        float area = calcular_area(puntos_interseccion);
-        cout << "Área de intersección: " << area << endl;
-    } else {
-        cout << "No hay intersección" << endl;
-    }
-
-}
-
-int main(){
-    test();
-    return 0;
-}
-
-

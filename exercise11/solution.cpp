@@ -68,24 +68,3 @@ float area_poligono(const vector<vector<float>>& poligono) {
     area = abs(area) / 2.0;
     return area;
 }
-
-void test() {
-    // Definir un polígono regular (rectángulo en este caso)
-    vector<vector<float>> poligono = {{0, 0}, {4, 0}, {4, 3}, {0, 3}};  // Rectángulo
-
-    float area = area_poligono(poligono);
-    if (area != -1) {
-        cout << "Area: " << area << endl;
-    }
-
-    poligono = {{1, 1}, {8, 2}, {7.62, 6.16}, {2.66, 5.74}};
-    float area1 = area_poligono(poligono);
-    if (area1 != -1) {
-        cout << "Area: " << area1 << endl;
-    }
-}
-
-int main() {
-    test();
-    return 0;
-}

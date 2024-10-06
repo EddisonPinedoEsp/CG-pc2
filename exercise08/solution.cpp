@@ -95,13 +95,5 @@ pair<vector<float>, vector<float>> cerca(vector<vector<float>>& P) {
     return puntosCerca;
 }
 
-int main() {
-    vector<vector<float>> P = {{2, 3}, {12, 30}, {40, 50}, {5, 1}, {12, 10}, {3, 4}};
-    pair<vector<float>, vector<float>> puntosCerca = cerca(P);
-    cout << "The cerca pair of points are: (" << puntosCerca.first[0] << ", " << puntosCerca.first[1] << ") and ("
-         << puntosCerca.second[0] << ", " << puntosCerca.second[1] << ")" << endl;
-    return 0;
-}
-
 
 
