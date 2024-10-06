@@ -56,23 +56,3 @@ bool intersecion(float xa, float ya, float xb, float yb, float xc, float yc, flo
     return false;
 }
 
-
-// void testTotal() {
-//     // Caso 1: Segmentos se interceptan
-//     if (intersecion(0, 0, 6, 4, 2, 0, 0, 2)) {
-//         cout << "Caso 1: Se interceptar\n";
-//     } else {
-//         cout << "Caso 1: No se interceptar\n";
-//     }
-// }
-
-// int main() {
-//     testTotal();
-//     return 0;
-// }
-
-
-
-
-
-

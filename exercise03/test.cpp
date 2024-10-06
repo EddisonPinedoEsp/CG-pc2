@@ -23,7 +23,7 @@ TEST(DistanciaPuntoRectaTest, PuntoFueraDeLaRecta) {
 }
 
 TEST(DistanciaPuntoRectaTest, PuntoEnElOrigen) {
-    vector<float> P1 = {1, 1};
+    vector<float> P1 = {1, 0};
     vector<float> d = {1, 1};
     vector<float> P = {0, 0};
     EXPECT_NEAR(distacia_punto_recta(P1, d, P), sqrt(2) / 2, 1e-5);

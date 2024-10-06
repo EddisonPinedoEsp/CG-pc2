@@ -30,6 +30,11 @@ set(SRC1_FILES ../exercise05/solution.cpp ../exercise05/test.cpp)
 add_executable(runTests5 ${SRC1_FILES})
 target_link_libraries(runTests5 gtest gtest_main)
 
+# Ejecutable de prueba para exercise07
+set(SRC1_FILES ../exercise07/solution.cpp ../exercise07/test.cpp)
+add_executable(runTests7 ${SRC1_FILES})
+target_link_libraries(runTests7 gtest gtest_main)
+
 # Ejecutable de prueba para exercise08
 set(SRC1_FILES ../exercise08/solution.cpp ../exercise08/test.cpp)
 add_executable(runTests8 ${SRC1_FILES})

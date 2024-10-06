@@ -57,7 +57,7 @@ TEST(PuntoEnPoligonoTest, ComplexPolygonOutside) {
 
 TEST(PuntoEnPoligonoTest, ConcavePolygonInside) {
     vector<vector<float>> P = {{0, 0}, {5, 0}, {3, 3}, {5, 5}, {0, 5}};
-    vector<float> A = {4, 2};
+    vector<float> A = {1, 4};
     bool result = punto_en_poligono(P, A);
     cout << "ConcavePolygonInside: Punto (" << A[0] << ", " << A[1] << ") -> " << (result ? "true" : "false") << endl;
     EXPECT_TRUE(result);
@@ -65,7 +65,7 @@ TEST(PuntoEnPoligonoTest, ConcavePolygonInside) {
 
 TEST(PuntoEnPoligonoTest, ConcavePolygonOutside) {
     vector<vector<float>> P = {{0, 0}, {5, 0}, {3, 3}, {5, 5}, {0, 5}};
-    vector<float> A = {1, 4};
+    vector<float> A = {4, 2};
     bool result = punto_en_poligono(P, A);
     cout << "ConcavePolygonOutside: Punto (" << A[0] << ", " << A[1] << ") -> " << (result ? "true" : "false") << endl;
     EXPECT_FALSE(result);

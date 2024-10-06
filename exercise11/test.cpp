@@ -26,7 +26,7 @@ TEST(AreaPoligonoTest, Pentagono) {
     vector<vector<float>> poligono = {{0, 0}, {4, 0}, {5, 3}, {2, 5}, {-1, 3}};
     float result = area_poligono(poligono);
     cout << "Pentagono: Área -> " << result << endl;
-    EXPECT_NEAR(result, 18.0, 1e-5);
+    EXPECT_NEAR(result, 21, 1e-5);
 }
 
 TEST(AreaPoligonoTest, Hexagono) {
@@ -40,7 +40,7 @@ TEST(AreaPoligonoTest, PoligonoGrande) {
     vector<vector<float>> poligono = {{0, 0}, {4, 0}, {4, 4}, {2, 6}, {0, 4}};
     float result = area_poligono(poligono);
     cout << "PoligonoGrande: Área -> " << result << endl;
-    EXPECT_NEAR(result, 16.0, 1e-5);
+    EXPECT_NEAR(result, 20.0, 1e-5);
 }
 
 int main(int argc, char **argv) {

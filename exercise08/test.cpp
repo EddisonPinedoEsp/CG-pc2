@@ -14,11 +14,11 @@ float distancia(const vector<float>& p1, const vector<float>& p2) {
 }
 
 TEST(CercaTest, SimpleCase) {
-    vector<vector<float>> P = {{0, 0}, {1, 1}, {2, 2}};
+    vector<vector<float>> P = {{0, 0}, {2, 2}, {3, 3}};
     auto result = cerca(P);
     float dist = distancia(result.first, result.second);
     cout << "SimpleCase: Distancia entre (" << result.first[0] << ", " << result.first[1] << ") y ("
-         << result.second[0] << ", " << result.second[1] << ") -> " << dist << endl;
+        << result.second[0] << ", " << result.second[1] << ") -> " << dist << endl;
     EXPECT_NEAR(dist, sqrt(2), 1e-5);
 }
 
@@ -27,7 +27,7 @@ TEST(CercaTest, MultiplePoints) {
     auto result = cerca(P);
     float dist = distancia(result.first, result.second);
     cout << "MultiplePoints: Distancia entre (" << result.first[0] << ", " << result.first[1] << ") y ("
-         << result.second[0] << ", " << result.second[1] << ") -> " << dist << endl;
+        << result.second[0] << ", " << result.second[1] << ") -> " << dist << endl;
     EXPECT_NEAR(dist, sqrt(2), 1e-5);
 }
 
@@ -36,7 +36,7 @@ TEST(CercaTest, NegativeCoordinates) {
     auto result = cerca(P);
     float dist = distancia(result.first, result.second);
     cout << "NegativeCoordinates: Distancia entre (" << result.first[0] << ", " << result.first[1] << ") y ("
-         << result.second[0] << ", " << result.second[1] << ") -> " << dist << endl;
+        << result.second[0] << ", " << result.second[1] << ") -> " << dist << endl;
     EXPECT_NEAR(dist, sqrt(2), 1e-5);
 }
 
@@ -45,7 +45,7 @@ TEST(CercaTest, SamePoint) {
     auto result = cerca(P);
     float dist = distancia(result.first, result.second);
     cout << "SamePoint: Distancia entre (" << result.first[0] << ", " << result.first[1] << ") y ("
-         << result.second[0] << ", " << result.second[1] << ") -> " << dist << endl;
+        << result.second[0] << ", " << result.second[1] << ") -> " << dist << endl;
     EXPECT_NEAR(dist, 0, 1e-5);
 }
 
@@ -57,7 +57,7 @@ TEST(CercaTest, LargeDataset) {
     auto result = cerca(P);
     float dist = distancia(result.first, result.second);
     cout << "LargeDataset: Distancia entre (" << result.first[0] << ", " << result.first[1] << ") y ("
-         << result.second[0] << ", " << result.second[1] << ") -> " << dist << endl;
+        << result.second[0] << ", " << result.second[1] << ") -> " << dist << endl;
     EXPECT_NEAR(dist, sqrt(2), 1e-5);
 }
 

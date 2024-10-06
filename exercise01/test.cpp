@@ -32,6 +32,12 @@ TEST(IntersectionTest, CoincidingLines) {
     EXPECT_TRUE(intersecion(xa, ya, xb, yb, xc, yc, xd, yd));
 }
 
+TEST(IntersectionTest, opuestos) {
+    float xa = 0, ya = 0, xb = 2, yb = 2, xc = 0, yc = 2, xd = 0.76, yd = 1.25;
+    cout << "Test puntos: (" << xa << ", " << ya << "), (" << xb << ", " << yb << "), (" << xc << ", " << yc << "), (" << xd << ", " << yd << ")\n";
+    EXPECT_FALSE(intersecion(xa, ya, xb, yb, xc, yc, xd, yd));
+}
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

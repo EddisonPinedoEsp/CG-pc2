@@ -36,7 +36,15 @@ TEST(NumeroTriangulacionesTest, Hexagono) {
 }
 
 TEST(NumeroTriangulacionesTest, PoligonoGrande) {
-    vector<vector<float>> poligono = {{0, 0}, {1, 0}, {2, 1}, {3, 2}, {2, 3}, {1, 3}, {0, 2}, {-1, 1}};
+    vector<vector<float>> poligono = {
+    {1, 0},
+    {0.6235, 0.7818},
+    {-0.2225, 0.9749},
+    {-0.9009, 0.4339},
+    {-0.9009, -0.4339},
+    {-0.2225, -0.9749},
+    {0.6235, -0.7818},
+    };
     int result = numeroTriangulaciones(poligono);
     cout << "PoligonoGrande: Número de triangulaciones -> " << result << endl;
     EXPECT_EQ(result, 42); // Número esperado basado en los números de Catalan
