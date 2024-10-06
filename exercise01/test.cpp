@@ -1,29 +1,38 @@
 #include <gtest/gtest.h>
+using namespace std;
 
 bool intersecion(float xa, float ya, float xb, float yb, float xc, float yc, float xd, float yd);
-
 TEST(IntersectionTest, NoIntersection) {
-    EXPECT_FALSE(intersecion(0, 0, 1, 1, 2, 2, 3, 3));
+    float xa = 0, ya = 0, xb = 1, yb = 1, xc = 2, yc = 2, xd = 3, yd = 3;
+    cout << "Test puntos: (" << xa << ", " << ya << "), (" << xb << ", " << yb << "), (" << xc << ", " << yc << "), (" << xd << ", " << yd << ")\n";
+    EXPECT_FALSE(intersecion(xa, ya, xb, yb, xc, yc, xd, yd));
 }
 
 TEST(IntersectionTest, IntersectionAtPoint) {
-    EXPECT_TRUE(intersecion(0, 0, 2, 2, 0, 2, 2, 0));
+    float xa = 0, ya = 0, xb = 2, yb = 2, xc = 0, yc = 2, xd = 2, yd = 0;
+    cout << "Test puntos: (" << xa << ", " << ya << "), (" << xb << ", " << yb << "), (" << xc << ", " << yc << "), (" << xd << ", " << yd << ")\n";
+    EXPECT_TRUE(intersecion(xa, ya, xb, yb, xc, yc, xd, yd));
 }
 
 TEST(IntersectionTest, OverlappingLines) {
-    EXPECT_TRUE(intersecion(0, 0, 2, 2, 1, 1, 3, 3));
+    float xa = 0, ya = 0, xb = 2, yb = 2, xc = 1, yc = 1, xd = 3, yd = 3;
+    cout << "Test puntos: (" << xa << ", " << ya << "), (" << xb << ", " << yb << "), (" << xc << ", " << yc << "), (" << xd << ", " << yd << ")\n";
+    EXPECT_TRUE(intersecion(xa, ya, xb, yb, xc, yc, xd, yd));
 }
 
 TEST(IntersectionTest, ParallelLines) {
-    EXPECT_FALSE(intersecion(0, 0, 2, 2, 0, 1, 2, 3));
+    float xa = 0, ya = 0, xb = 2, yb = 2, xc = 0, yc = 1, xd = 2, yd = 3;
+    cout << "Test puntos: (" << xa << ", " << ya << "), (" << xb << ", " << yb << "), (" << xc << ", " << yc << "), (" << xd << ", " << yd << ")\n";
+    EXPECT_FALSE(intersecion(xa, ya, xb, yb, xc, yc, xd, yd));
 }
 
 TEST(IntersectionTest, CoincidingLines) {
-    EXPECT_TRUE(intersecion(0, 0, 2, 2, 0, 0, 2, 2));
+    float xa = 0, ya = 0, xb = 2, yb = 2, xc = 0, yc = 0, xd = 2, yd = 2;
+    cout << "Test puntos: (" << xa << ", " << ya << "), (" << xb << ", " << yb << "), (" << xc << ", " << yc << "), (" << xd << ", " << yd << ")\n";
+    EXPECT_TRUE(intersecion(xa, ya, xb, yb, xc, yc, xd, yd));
 }
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
-

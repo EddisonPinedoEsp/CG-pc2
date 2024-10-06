@@ -19,11 +19,3 @@ float distacia_punto_recta(vector<float> P1, vector<float> d, vector<float> P) {
     float z2 = z1 - P[2];
     return sqrt(x2 * x2 + y2 * y2 + z2 * z2);
 }
-
-int main() {
-    vector<float> P1 = {-1, 2, 3};
-    vector<float> d = {3, 1, -2};
-    vector<float> P = {1, -4, 3};
-    cout << distacia_punto_recta(P1, d, P) << endl;
-    return 0;
-}

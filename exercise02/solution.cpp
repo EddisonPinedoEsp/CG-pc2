@@ -41,19 +41,3 @@ bool esConvexo(const vector<vector<float>>& polygon) {
     return true;
 }
 
-// Función de prueba
-void test() {
-    vector<vector<float>> P = {{0, 0}, {4, 0}, {4, 3}, {0, 3}};  // Rectángulo
-    cout << (esConvexo(P) ? "Es convexo" : "No es convexo") << endl;
-    P = {{1, 1}, {8, 2}, {7.62, 6.16}, {2.66, 5.74}};  // Rectángulo
-    cout << (esConvexo(P) ? "Es convexo" : "No es convexo") << endl;
-
-    P = {{0, 0}, {4, 0}, {4, 3}, {2, 3}, {0, 3}};  // Trapecio
-    cout << (esConvexo(P) ? "Es convexo" : "No es convexo") << endl;
-}
-
-int main() {
-    test();
-    return 0;
-}
-

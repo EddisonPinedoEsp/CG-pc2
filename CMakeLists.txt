@@ -5,17 +5,19 @@ project(CG-pc2-tests)
 add_subdirectory(googletest)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
-# Crear ejecutable de prueba para exercise01
+# Ejecutable de prueba para exercise01
 set(SRC1_FILES ../exercise01/solution.cpp ../exercise01/test.cpp)
 add_executable(runTests1 ${SRC1_FILES})
 target_link_libraries(runTests1 gtest gtest_main)
 
-# # Crear ejecutable de prueba para src2
-# set(SRC2_FILES src2/sol2.cpp src2/test2.cpp)
-# add_executable(runTests2 ${SRC2_FILES})
-# target_link_libraries(runTests2 gtest gtest_main)
+# Ejecutable de prueba para exercise02
+set(SRC1_FILES ../exercise02/solution.cpp ../exercise02/test.cpp)
+add_executable(runTests2 ${SRC1_FILES})
+target_link_libraries(runTests2 gtest gtest_main)
 
-# # Crear ejecutable de prueba para src3
-# set(SRC3_FILES src3/sol3.cpp src3/test3.cpp)
-# add_executable(runTests3 ${SRC3_FILES})
-# target_link_libraries(runTests3 gtest gtest_main)
+# Ejecutable de prueba para exercise02
+set(SRC1_FILES ../exercise03/solution.cpp ../exercise03/test.cpp)
+add_executable(runTests3 ${SRC1_FILES})
+target_link_libraries(runTests3 gtest gtest_main)
+
+
