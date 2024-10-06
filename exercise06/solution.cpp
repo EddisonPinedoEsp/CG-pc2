@@ -240,12 +240,12 @@ int main() {
 
     // Tamaños de puntos a probar
     vector<int> sizes = {
-                        // 1000, 
-                        // 10000, 
+                        1000, 
+                        10000, 
                         100000, 
-                        // 1000000, 
-                        // 2000000, 
-                        // 5000000
+                        1000000, 
+                        2000000, 
+                        5000000
                         };
 
     // Disposiciones de puntos

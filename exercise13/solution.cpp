@@ -53,18 +53,24 @@ vector<vector<float>> douglasPeucker(const vector<vector<float>>& puntos, float 
 }
 
 int main() {
-    // Example usage
-    vector<vector<float>> puntos;
-    int num_points = 100;
-    float a = 0.1f; // Spiral coefficient
-    float b = 0.2f; // Spiral coefficient
 
-    for (int i = 0; i < num_points; ++i) {
-        float theta = i * 0.1f;
-        float x = (a + b * theta) * cos(theta);
-        float y = (a + b * theta) * sin(theta);
-        puntos.push_back({x, y});
-    }
+vector<vector<float>> puntos = {
+    {0.0, 0.0},
+    {1.0, 1.0},    
+    {2.0, 2.0},     
+    {3.0, 1.0},
+    {4.0, 0.5},    
+    {5.0, 0.0},     
+    {6.0, 0.2},
+    {7.0, 0.4},
+    {8.0, 0.2},     
+    {9.0, 0.0},     
+    {10.0, 0.0},    
+    {11.0, -0.5},
+    {12.0, -1.0},   
+    {13.0, -0.5},  
+    {14.0, 0.0}
+};
 
     float epsilon = 1.0;
 
@@ -74,51 +80,45 @@ int main() {
     for (const auto& punto : simplified_points) {
         cout << "(" << punto[0] << ", " << punto[1] << ")\n";
     }
-    // Find the bounding box of the puntos
-    float minX = numeric_limits<float>::max(), minY = numeric_limits<float>::max();
-    float maxX = numeric_limits<float>::lowest(), maxY = numeric_limits<float>::lowest();
 
-    for (const auto& punto : puntos) {
-        if (punto[0] < minX) minX = punto[0];
-        if (punto[1] < minY) minY = punto[1];
-        if (punto[0] > maxX) maxX = punto[0];
-        if (punto[1] > maxY) maxY = punto[1];
-    }
+    // float minX = numeric_limits<float>::max(), minY = numeric_limits<float>::max();
+    // float maxX = numeric_limits<float>::lowest(), maxY = numeric_limits<float>::lowest();
 
-    // Calculate scale and margin
-    int margin = 50;
-    float scaleX = (1000.0f - 2 * margin) / (maxX - minX);
-    float scaleY = (1000.0f - 2 * margin) / (maxY - minY);
-    float scale = min(scaleX, scaleY);
+    // for (const auto& punto : puntos) {
+    //     if (punto[0] < minX) minX = punto[0];
+    //     if (punto[1] < minY) minY = punto[1];
+    //     if (punto[0] > maxX) maxX = punto[0];
+    //     if (punto[1] > maxY) maxY = punto[1];
+    // }
 
-    // Create an image with a margin
-    cv::Mat image(1000 + 2 * margin, 1000 + 2 * margin, CV_8UC3, cv::Scalar(255, 255, 255));
+    // int margin = 50;
+    // float scaleX = (1000.0f - 2 * margin) / (maxX - minX);
+    // float scaleY = (1000.0f - 2 * margin) / (maxY - minY);
+    // float scale = min(scaleX, scaleY);
 
-    // Draw original puntos in blue
-    for (const auto& punto : puntos) {
-        cv::circle(image, cv::Point((punto[0] - minX) * scale + margin, 1000 - (punto[1] - minY) * scale + margin), 5, cv::Scalar(255, 0, 0), -1);
-    }
+    // cv::Mat image(1000 + 2 * margin, 1000 + 2 * margin, CV_8UC3, cv::Scalar(255, 255, 255));
 
-    // Draw simplified puntos in red
-    for (const auto& punto : simplified_points) {
-        cv::circle(image, cv::Point((punto[0] - minX) * scale + margin, 1000 - (punto[1] - minY) * scale + margin), 5, cv::Scalar(0, 0, 255), -1);
-    }
+    // for (const auto& punto : puntos) {
+    //     cv::circle(image, cv::Point((punto[0] - minX) * scale + margin, 1000 - (punto[1] - minY) * scale + margin), 5, cv::Scalar(255, 0, 0), -1);
+    // }
 
-    // Draw lines between original puntos
-    for (size_t i = 0; i < puntos.size() - 1; ++i) {
-        cv::line(image, cv::Point((puntos[i][0] - minX) * scale + margin, 1000 - (puntos[i][1] - minY) * scale + margin), 
-                cv::Point((puntos[i + 1][0] - minX) * scale + margin, 1000 - (puntos[i + 1][1] - minY) * scale + margin), 
-                cv::Scalar(255, 0, 0), 1);
-    }
+    // for (const auto& punto : simplified_points) {
+    //     cv::circle(image, cv::Point((punto[0] - minX) * scale + margin, 1000 - (punto[1] - minY) * scale + margin), 5, cv::Scalar(0, 0, 255), -1);
+    // }
 
-    // Draw lines between simplified puntos
-    for (size_t i = 0; i < simplified_points.size() - 1; ++i) {
-        cv::line(image, cv::Point((simplified_points[i][0] - minX) * scale + margin, 1000 - (simplified_points[i][1] - minY) * scale + margin), 
-                cv::Point((simplified_points[i + 1][0] - minX) * scale + margin, 1000 - (simplified_points[i + 1][1] - minY) * scale + margin), 
-                cv::Scalar(0, 0, 255), 1);
-    }
+    // for (size_t i = 0; i < puntos.size() - 1; ++i) {
+    //     cv::line(image, cv::Point((puntos[i][0] - minX) * scale + margin, 1000 - (puntos[i][1] - minY) * scale + margin), 
+    //             cv::Point((puntos[i + 1][0] - minX) * scale + margin, 1000 - (puntos[i + 1][1] - minY) * scale + margin), 
+    //             cv::Scalar(255, 0, 0), 1);
+    // }
 
-    cv::imwrite("points_DO.png", image);
+    // for (size_t i = 0; i < simplified_points.size() - 1; ++i) {
+    //     cv::line(image, cv::Point((simplified_points[i][0] - minX) * scale + margin, 1000 - (simplified_points[i][1] - minY) * scale + margin), 
+    //             cv::Point((simplified_points[i + 1][0] - minX) * scale + margin, 1000 - (simplified_points[i + 1][1] - minY) * scale + margin), 
+    //             cv::Scalar(0, 0, 255), 1);
+    // }
+
+    // cv::imwrite("Douglas-Peucker.png", image);
 
     return 0;
 }
