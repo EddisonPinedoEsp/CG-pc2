@@ -1,58 +1,54 @@
-# include <iostream>
+#include <iostream>
+#include <limits>
 using namespace std;
 
-int orientacion(float xa, float ya, float xb, float yb, float xc, float yc) {
-    // Calcula el producto cruz para la orientación de tres puntos
-    float orientation = (yb - ya) * (xc - xb) - (xb - xa) * (yc - yb);
-
-    // Si el producto cruz es 0, los puntos son colineales
-    if (orientation == 0) {
-        return 0;
-    }
-
-    return (orientation > 0) ? 1 : 2;
+template <typename T>
+int orientation(T px, T py, T qx, T qy, T rx, T ry) {
+    T val = (qy - py) * (rx - qx) - (qx - px) * (ry - qy);
+    if (val == 0) return 0;  // colinear
+    return (val > 0) ? 1 : 2; // horario o antihorario
 }
 
-bool enSegmento(float xa, float ya, float xb, float yb, float xc, float yc) {
-    if (xc >= min(xa, xb) && xc <= max(xa, xb) && yc >= min(ya, yb) && yc <= max(ya, yb)) {
+template <typename T>
+bool onSegment(T px, T py, T qx, T qy, T rx, T ry) {
+    if (qx <= max(px, rx) && qx >= min(px, rx) &&
+        qy <= max(py, ry) && qy >= min(py, ry))
         return true;
-    }
-
     return false;
 }
 
-bool intersecion(float xa, float ya, float xb, float yb, float xc, float yc, float xd, float yd) {
-    // Encuentra las cuatro orientaciones necesarias para determinar si hay intersección
-    float o1 = orientacion(xa, ya, xb, yb, xc, yc);
-    float o2 = orientacion(xa, ya, xb, yb, xd, yd);
-    float o3 = orientacion(xc, yc, xd, yd, xa, ya);
-    float o4 = orientacion(xc, yc, xd, yd, xb, yb);
+template <typename T>
+bool intersection(T xa, T ya, T xb, T yb, T xc, T yc, T xd, T yd) {
+    int o1 = orientation(xa, ya, xb, yb, xc, yc);
+    int o2 = orientation(xa, ya, xb, yb, xd, yd);
+    int o3 = orientation(xc, yc, xd, yd, xa, ya);
+    int o4 = orientation(xc, yc, xd, yd, xb, yb);
 
     // Caso general
-    if (o1 != o2 && o3 != o4) {
+    if (o1 != o2 && o3 != o4)
         return true;
-    }
+
     // Casos especiales
-    // xa, ya y xb, yb son colineales y xc, yc está en el segmento
-    if (o1 == 0 && enSegmento(xa, ya, xb, yb, xc, yc)) {
-        return true;
-    }
+    // A, B y C son colineares y C está en el segmento AB
+    if (o1 == 0 && onSegment(xa, ya, xc, yc, xb, yb)) return true;
 
-    // xa, ya y xb, yb son colineales y xd, yd está en el segmento
-    if (o2 == 0 && enSegmento(xa, ya, xb, yb, xd, yd)) {
-        return true;
-    }
+    // A, B y D son colineares y D está en el segmento AB
+    if (o2 == 0 && onSegment(xa, ya, xd, yd, xb, yb)) return true;
 
-    // xc, yc y xd, yd son colineales y xa, ya está en el segmento
-    if (o3 == 0 && enSegmento(xc, yc, xd, yd, xa, ya)) {
-        return true;
-    }
+    // C, D y A son colineares y A está en el segmento CD
+    if (o3 == 0 && onSegment(xc, yc, xa, ya, xd, yd)) return true;
 
-    // xc, yc y xd, yd son colineales y xb, yb está en el segmento
-    if (o4 == 0 && enSegmento(xc, yc, xd, yd, xb, yb)) {
-        return true;
-    }
-    
-    return false;
+    // C, D y B son colineares y B está en el segmento CD
+    if (o4 == 0 && onSegment(xc, yc, xb, yb, xd, yd)) return true;
+
+    return false; // No se intersectan
 }
 
+// Sobrecarga para tipos específicos
+bool intersection(int xa, int ya, int xb, int yb, int xc, int yc, int xd, int yd) {
+    return intersection<int>(xa, ya, xb, yb, xc, yc, xd, yd);
+}
+
+bool intersection(double xa, double ya, double xb, double yb, double xc, double yc, double xd, double yd) {
+    return intersection<double>(xa, ya, xb, yb, xc, yc, xd, yd);
+}
