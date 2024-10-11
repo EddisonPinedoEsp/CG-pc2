@@ -1,46 +1,60 @@
 #include <gtest/gtest.h>
 #include <vector>
-#include <iostream>
-#include <cmath>
+#include <limits>
 
 using namespace std;
 
-// Mock function to simulate area_poligono behavior for testing
-float area_poligono(const vector<vector<float>>& poligono);
+double area(vector<vector<int>> const& vertices);
+double area(vector<vector<double>> const& vertices);
 
-TEST(AreaPoligonoTest, Triangulo) {
-    vector<vector<float>> poligono = {{0, 0}, {4, 0}, {2, 3}};
-    float result = area_poligono(poligono);
-    cout << "Triangulo: Área -> " << result << endl;
-    EXPECT_NEAR(result, 6.0, 1e-5);
+TEST(AreaTestInt, SimpleSquare) {
+    vector<vector<int>> vertices = {{0, 0}, {4, 0}, {4, 4}, {0, 4}};
+    EXPECT_EQ(area(vertices), 16.0);
 }
 
-TEST(AreaPoligonoTest, Cuadrilatero) {
-    vector<vector<float>> poligono = {{0, 0}, {4, 0}, {4, 3}, {0, 3}};
-    float result = area_poligono(poligono);
-    cout << "Cuadrilatero: Área -> " << result << endl;
-    EXPECT_NEAR(result, 12.0, 1e-5);
+TEST(AreaTestInt, SimpleTriangle) {
+    vector<vector<int>> vertices = {{0, 0}, {4, 0}, {2, 4}};
+    EXPECT_NEAR(area(vertices), 8.0, 1e-9);
 }
 
-TEST(AreaPoligonoTest, Pentagono) {
-    vector<vector<float>> poligono = {{0, 0}, {4, 0}, {5, 3}, {2, 5}, {-1, 3}};
-    float result = area_poligono(poligono);
-    cout << "Pentagono: Área -> " << result << endl;
-    EXPECT_NEAR(result, 21, 1e-5);
+TEST(AreaTestInt, LargeCoordinates) {
+    vector<vector<int>> vertices = {
+        {std::numeric_limits<int>::min(), std::numeric_limits<int>::min()},
+        {std::numeric_limits<int>::max(), std::numeric_limits<int>::min()},
+        {std::numeric_limits<int>::max(), std::numeric_limits<int>::max()},
+        {std::numeric_limits<int>::min(), std::numeric_limits<int>::max()}
+    };
+    EXPECT_NEAR(area(vertices), 1.7014118346046923e+38, 1e+30);
 }
 
-TEST(AreaPoligonoTest, Hexagono) {
-    vector<vector<float>> poligono = {{0, 0}, {2, 0}, {3, 2}, {2, 4}, {0, 4}, {-1, 2}};
-    float result = area_poligono(poligono);
-    cout << "Hexagono: Área -> " << result << endl;
-    EXPECT_NEAR(result, 12.0, 1e-5);
+TEST(AreaTestDouble, SimpleSquare) {
+    vector<vector<double>> vertices = {{0.0, 0.0}, {4.0, 0.0}, {4.0, 4.0}, {0.0, 4.0}};
+    EXPECT_NEAR(area(vertices), 16.0, 1e-9);
 }
 
-TEST(AreaPoligonoTest, PoligonoGrande) {
-    vector<vector<float>> poligono = {{0, 0}, {4, 0}, {4, 4}, {2, 6}, {0, 4}};
-    float result = area_poligono(poligono);
-    cout << "PoligonoGrande: Área -> " << result << endl;
-    EXPECT_NEAR(result, 20.0, 1e-5);
+TEST(AreaTestDouble, SimpleTriangle) {
+    vector<vector<double>> vertices = {{0.0, 0.0}, {4.0, 0.0}, {2.0, 4.0}};
+    EXPECT_NEAR(area(vertices), 8.0, 1e-9);
+}
+
+TEST(AreaTestDouble, LargeCoordinates) {
+    vector<vector<double>> vertices = {
+        {-1e308, -1e308},
+        {1e308, -1e308},
+        {1e308, 1e308},
+        {-1e308, 1e308}
+    };
+    EXPECT_NEAR(area(vertices), 2e+38, 1e+30);
+}
+
+TEST(AreaTestDouble, SmallCoordinates) {
+    vector<vector<double>> vertices = {
+        {-1.000000001, -1.000000001},
+        {1.000000001, -1.000000001},
+        {1.000000001, 1.000000001},
+        {-1.000000001, 1.000000001}
+    };
+    EXPECT_NEAR(area(vertices), 4.000000004, 1e-9);
 }
 
 int main(int argc, char **argv) {
