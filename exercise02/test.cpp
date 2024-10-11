@@ -2,74 +2,65 @@
 #include <vector>
 using namespace std;
 
-// Declaración de la función esConvexo
-bool esConvexo(const vector<vector<float>>& polygon);
+bool is_convex(vector<vector<int>> const& P);
+bool is_convex(vector<vector<double>> const& P);
 
-TEST(EsConvexoTest, ConvexPolygon) {
-    vector<vector<float>> polygon = {{0, 0}, {1, 0}, {1, 1}, {0, 1}};
-    EXPECT_TRUE(esConvexo(polygon));
+TEST(IsConvexTestInt, ConvexPolygon) {
+    vector<vector<int>> P = {{0, 0}, {4, 0}, {4, 4}, {0, 4}};
+    EXPECT_TRUE(is_convex(P));
 }
 
-TEST(EsConvexoTest, ConcavePolygon) {
-    vector<vector<float>> polygon = {{0, 0}, {2, 0}, {1, 1}, {2, 2}, {0, 2}};
-    EXPECT_FALSE(esConvexo(polygon));
-}
-TEST(EsConvexoTest, ConvexPolygon6) {
-    vector<vector<float>> polygon = {{0, 0}, {1, 0}, {2, 1}, {1, 2}, {0, 2}, {-1, 1}};
-    EXPECT_TRUE(esConvexo(polygon));
+TEST(IsConvexTestInt, ConcavePolygon) {
+    vector<vector<int>> P = {{0, 0}, {4, 0}, {2, 2}, {4, 4}, {0, 4}};
+    EXPECT_FALSE(is_convex(P));
 }
 
-TEST(EsConvexoTest, ConvexPolygon7) {
-    vector<vector<float>> polygon = {{0, 0}, {1, 0}, {2, 1}, {2, 2}, {1, 3}, {0, 3}, {-1, 2}};
-    EXPECT_TRUE(esConvexo(polygon));
+TEST(IsConvexTestInt, ColinearPoints) {
+    vector<vector<int>> P = {{0, 0}, {2, 2}, {4, 4}};
+    EXPECT_FALSE(is_convex(P));
 }
 
-TEST(EsConvexoTest, ConvexPolygon8) {
-    vector<vector<float>> polygon = {{0, 0}, {1, 0}, {2, 1}, {2, 2}, {1, 3}, {0, 3}, {-1, 2}, {-1, 1}};
-    EXPECT_TRUE(esConvexo(polygon));
+TEST(IsConvexTestInt, LargeCoordinates) {
+    vector<vector<int>> P = {
+        {std::numeric_limits<int>::min(), std::numeric_limits<int>::min()},
+        {std::numeric_limits<int>::max(), std::numeric_limits<int>::min()},
+        {std::numeric_limits<int>::max(), std::numeric_limits<int>::max()},
+        {std::numeric_limits<int>::min(), std::numeric_limits<int>::max()}
+    };
+    EXPECT_TRUE(is_convex(P));
 }
 
-TEST(EsConvexoTest, ConvexPolygon9) {
-    vector<vector<float>> polygon = {{0, 0}, {1, 0}, {2, 1}, {2, 2}, {1, 3}, {0, 3}, {-1, 2}, {-1, 1}};
-    EXPECT_TRUE(esConvexo(polygon));
+TEST(IsConvexTestDouble, ConvexPolygon) {
+    vector<vector<double>> P = {{0.0, 0.0}, {4.0, 0.0}, {4.0, 4.0}, {0.0, 4.0}};
+    EXPECT_TRUE(is_convex(P));
 }
 
-TEST(EsConvexoTest, ConcavePolygon6) {
-    vector<vector<float>> polygon = {{0, 0}, {2, 0}, {1, 1}, {2, 2}, {0, 2}, {1, 1.5}};
-    EXPECT_FALSE(esConvexo(polygon));
+TEST(IsConvexTestDouble, ConcavePolygon) {
+    vector<vector<double>> P = {{0.0, 0.0}, {4.0, 0.0}, {2.0, 2.0}, {4.0, 4.0}, {0.0, 4.0}};
+    EXPECT_FALSE(is_convex(P));
 }
 
-TEST(EsConvexoTest, ConcavePolygon7) {
-    vector<vector<float>> polygon = {{0, 0}, {2, 0}, {3, 1}, {2, 2}, {1, 1.5}, {0, 2}, {-1, 1}};
-    EXPECT_FALSE(esConvexo(polygon));
+TEST(IsConvexTestDouble, ColinearPoints) {
+    vector<vector<double>> P = {{0.0, 0.0}, {2.0, 2.0}, {4.0, 4.0}};
+    EXPECT_FALSE(is_convex(P));
 }
 
-TEST(EsConvexoTest, ConcavePolygon8) {
-    vector<vector<float>> polygon = {{0, 0}, {2, 0}, {3, 1}, {2, 2}, {1, 1.5}, {0, 2}, {-1, 1}, {1, 0.5}};
-    EXPECT_FALSE(esConvexo(polygon));
+TEST(IsConvexTestDouble, LargeCoordinates) {
+    vector<vector<double>> P = {
+        {-1e308, -1e308},
+        {1e308, -1e308},
+        {1e308, 1e308},
+        {-1e308, 1e308}
+    };
+    EXPECT_TRUE(is_convex(P));
 }
 
-TEST(EsConvexoTest, ConcavePolygon9) {
-    vector<vector<float>> polygon = {{0, 0}, {2, 0}, {3, 1}, {2, 2}, {1, 1.5}, {0, 2}, {-1, 1}, {1, 0.5}, {1.5, 1}};
-    EXPECT_FALSE(esConvexo(polygon));
-}
-
-TEST(EsConvexoTest, Triangle) {
-    vector<vector<float>> polygon = {{0, 0}, {1, 0}, {0.5, 1}};
-    EXPECT_TRUE(esConvexo(polygon));
-}
-
-TEST(EsConvexoTest, Line) {
-    vector<vector<float>> polygon = {{0, 0}, {1, 0}};
-    EXPECT_FALSE(esConvexo(polygon));
-}
-
-TEST(EsConvexoTest, SinglePoint) {
-    vector<vector<float>> polygon = {{0, 0}};
-    EXPECT_FALSE(esConvexo(polygon));
-}
-
-TEST(EsConvexoTest, EmptyPolygon) {
-    vector<vector<float>> polygon = {};
-    EXPECT_FALSE(esConvexo(polygon));
+TEST(IsConvexTestDouble, SmallCoordinates) {
+    vector<vector<double>> P = {
+        {-1.000000001, -1.000000001},
+        {1.000000001, -1.000000001},
+        {1.000000001, 1.000000001},
+        {-1.000000001, 1.000000001}
+    };
+    EXPECT_TRUE(is_convex(P));
 }
