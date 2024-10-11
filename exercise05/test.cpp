@@ -1,90 +1,107 @@
 #include <gtest/gtest.h>
+#include <limits>
 #include <vector>
-#include <iostream>
 
 using namespace std;
 
-// Mock function to simulate punto_en_poligono behavior for testing
-bool punto_en_poligono(const vector<vector<float>>& P, const vector<float>& A);
+bool inside_polygon(const vector<vector<int>>& vertices, int px, int py);
+bool inside_polygon(const vector<vector<double>>& vertices, double px, double py);
 
-TEST(PuntoEnPoligonoTest, InsidePolygon) {
-    vector<vector<float>> P = {{0, 0}, {5, 0}, {5, 5}, {0, 5}};
-    vector<float> A = {2, 2};
-    bool result = punto_en_poligono(P, A);
-    cout << "InsidePolygon: Punto (" << A[0] << ", " << A[1] << ") -> " << (result ? "true" : "false") << endl;
-    EXPECT_TRUE(result);
+TEST(InsidePolygonTestInt, PointInsideOutsite) {
+    vector<vector<int>> vertices = {{0, 0}, {5, 0}, {5, 5}, {0, 5}};
+    
+    EXPECT_TRUE(inside_polygon(vertices, 2, 2));
+    EXPECT_TRUE(inside_polygon(vertices, 0, 0));
+    EXPECT_TRUE(inside_polygon(vertices, 5, 0));
+    EXPECT_TRUE(inside_polygon(vertices, 5, 5));
+    EXPECT_TRUE(inside_polygon(vertices, 0, 5));
+    EXPECT_FALSE(inside_polygon(vertices, 6, 6));
+    EXPECT_TRUE(inside_polygon(vertices, 5, 2));
 }
 
-TEST(PuntoEnPoligonoTest, OnVertex) {
-    vector<vector<float>> P = {{0, 0}, {5, 0}, {5, 5}, {0, 5}};
-    vector<float> A = {0, 0};
-    bool result = punto_en_poligono(P, A);
-    cout << "OnVertex: Punto (" << A[0] << ", " << A[1] << ") -> " << (result ? "true" : "false") << endl;
-    EXPECT_TRUE(result);
+TEST(InsidePolygonTestInt, LargeCoordinates) {
+    vector<vector<int>> vertices = {
+        {numeric_limits<int>::min(), numeric_limits<int>::min()},
+        {numeric_limits<int>::max(), numeric_limits<int>::min()},
+        {numeric_limits<int>::max(), numeric_limits<int>::max()},
+        {numeric_limits<int>::min(), numeric_limits<int>::max()}
+    };
+    
+    EXPECT_TRUE(inside_polygon(vertices, 0, 0));
+    
+    // vertices
+    EXPECT_TRUE(inside_polygon(vertices, numeric_limits<int>::min(), numeric_limits<int>::min()));
+    EXPECT_TRUE(inside_polygon(vertices, numeric_limits<int>::max(), numeric_limits<int>::min()));
+    EXPECT_TRUE(inside_polygon(vertices, numeric_limits<int>::max(), numeric_limits<int>::max()));
+    EXPECT_TRUE(inside_polygon(vertices, numeric_limits<int>::min(), numeric_limits<int>::max()));
+
+    // bordes
+    EXPECT_TRUE(inside_polygon(vertices, 0, numeric_limits<int>::min()));
+    EXPECT_TRUE(inside_polygon(vertices, numeric_limits<int>::max(), 0));
+    EXPECT_TRUE(inside_polygon(vertices, 0, numeric_limits<int>::max()));
+    EXPECT_TRUE(inside_polygon(vertices, numeric_limits<int>::min(), 0));
+
+
+    // dentro
+    EXPECT_TRUE(inside_polygon(vertices, 5, 5));
+    EXPECT_TRUE(inside_polygon(vertices, 99, 99));
+    EXPECT_TRUE(inside_polygon(vertices, -99, -99));
+    EXPECT_TRUE(inside_polygon(vertices, 1000, 10000));
+
 }
 
-TEST(PuntoEnPoligonoTest, OnEdge) {
-    vector<vector<float>> P = {{0, 0}, {5, 0}, {5, 5}, {0, 5}};
-    vector<float> A = {2.5, 0};
-    bool result = punto_en_poligono(P, A);
-    cout << "OnEdge: Punto (" << A[0] << ", " << A[1] << ") -> " << (result ? "true" : "false") << endl;
-    EXPECT_TRUE(result);
+TEST(InsidePolygonTestDouble, PointInside) {
+    vector<vector<double>> vertices = {{0.0, 0.0}, {5.0, 0.0}, {5.0, 5.0}, {0.0, 5.0}};
+    EXPECT_TRUE(inside_polygon(vertices, 2.0, 2.0));
 }
 
-TEST(PuntoEnPoligonoTest, OutsidePolygon) {
-    vector<vector<float>> P = {{0, 0}, {5, 0}, {5, 5}, {0, 5}};
-    vector<float> A = {6, 6};
-    bool result = punto_en_poligono(P, A);
-    cout << "OutsidePolygon: Punto (" << A[0] << ", " << A[1] << ") -> " << (result ? "true" : "false") << endl;
-    EXPECT_FALSE(result);
+TEST(InsidePolygonTestDouble, PointOutside) {
+    vector<vector<double>> vertices = {{0.0, 0.0}, {5.0, 0.0}, {5.0, 5.0}, {0.0, 5.0}};
+    EXPECT_FALSE(inside_polygon(vertices, 6.0, 6.0));
 }
 
-TEST(PuntoEnPoligonoTest, ComplexPolygonInside) {
-    vector<vector<float>> P = {{0, 0}, {5, 0}, {5, 5}, {3, 3}, {0, 5}};
-    vector<float> A = {2, 2};
-    bool result = punto_en_poligono(P, A);
-    cout << "ComplexPolygonInside: Punto (" << A[0] << ", " << A[1] << ") -> " << (result ? "true" : "false") << endl;
-    EXPECT_TRUE(result);
+TEST(InsidePolygonTestDouble, PointOnEdge) {
+    vector<vector<double>> vertices = {{0.0, 0.0}, {5.0, 0.0}, {5.0, 5.0}, {0.0, 5.0}};
+    EXPECT_TRUE(inside_polygon(vertices, 5.0, 2.0));
 }
 
-TEST(PuntoEnPoligonoTest, ComplexPolygonOutside) {
-    vector<vector<float>> P = {{0, 0}, {5, 0}, {5, 5}, {3, 3}, {0, 5}};
-    vector<float> A = {6, 6};
-    bool result = punto_en_poligono(P, A);
-    cout << "ComplexPolygonOutside: Punto (" << A[0] << ", " << A[1] << ") -> " << (result ? "true" : "false") << endl;
-    EXPECT_FALSE(result);
+TEST(InsidePolygonTestDouble, PointAtVertex) {
+    vector<vector<double>> vertices = {{0.0, 0.0}, {5.0, 0.0}, {5.0, 5.0}, {0.0, 5.0}};
+    EXPECT_TRUE(inside_polygon(vertices, 0.0, 0.0));
 }
 
-TEST(PuntoEnPoligonoTest, ConcavePolygonInside) {
-    vector<vector<float>> P = {{0, 0}, {5, 0}, {3, 3}, {5, 5}, {0, 5}};
-    vector<float> A = {1, 4};
-    bool result = punto_en_poligono(P, A);
-    cout << "ConcavePolygonInside: Punto (" << A[0] << ", " << A[1] << ") -> " << (result ? "true" : "false") << endl;
-    EXPECT_TRUE(result);
+TEST(InsidePolygonTestDouble, LargeCoordinates) {
+    vector<vector<double>> vertices = {
+        {-1e308, -1e308},
+        {1e308, -1e308},
+        {1e308, 1e308},
+        {-1e308, 1e308}
+    };
+    EXPECT_TRUE(inside_polygon(vertices, 0.0, 0.0));
 }
 
-TEST(PuntoEnPoligonoTest, ConcavePolygonOutside) {
-    vector<vector<float>> P = {{0, 0}, {5, 0}, {3, 3}, {5, 5}, {0, 5}};
-    vector<float> A = {4, 2};
-    bool result = punto_en_poligono(P, A);
-    cout << "ConcavePolygonOutside: Punto (" << A[0] << ", " << A[1] << ") -> " << (result ? "true" : "false") << endl;
-    EXPECT_FALSE(result);
+TEST(InsidePolygonTestDouble, SmallCoordinates) {
+    vector<vector<double>> vertices = {
+        {-1.000000001, -1.000000001},
+        {1.000000001, -1.000000001},
+        {1.000000001, 1.000000001},
+        {-1.000000001, 1.000000001}
+    };
+    EXPECT_TRUE(inside_polygon(vertices, 0.0, 0.0));
 }
 
-TEST(PuntoEnPoligonoTest, NegativeCoordinates) {
-    vector<vector<float>> P = {{-5, -5}, {0, 0}, {-5, 0}, {0, -5}};
-    vector<float> A = {-3, -2};
-    bool result = punto_en_poligono(P, A);
-    cout << "NegativeCoordinates: Punto (" << A[0] << ", " << A[1] << ") -> " << (result ? "true" : "false") << endl;
-    EXPECT_TRUE(result);
-}
-
-TEST(PuntoEnPoligonoTest, FloatingPointPrecision) {
-    vector<vector<float>> P = {{0, 0}, {5, 0}, {5, 5}, {0, 5}};
-    vector<float> A = {2.999999, 2.999999};
-    bool result = punto_en_poligono(P, A);
-    cout << "FloatingPointPrecision: Punto (" << A[0] << ", " << A[1] << ") -> " << (result ? "true" : "false") << endl;
-    EXPECT_TRUE(result);
+TEST(InsidePolygonTestDouble, ExhaustiveTest) {
+    vector<vector<double>> vertices = {
+        {-numeric_limits<double>::max(), -numeric_limits<double>::max()},
+        {numeric_limits<double>::max(), -numeric_limits<double>::max()},
+        {numeric_limits<double>::max(), numeric_limits<double>::max()},
+        {-numeric_limits<double>::max(), numeric_limits<double>::max()}
+    };
+    EXPECT_TRUE(inside_polygon(vertices, 0.0, 0.0));
+    EXPECT_TRUE(inside_polygon(vertices, -numeric_limits<double>::max(), -numeric_limits<double>::max()));
+    EXPECT_TRUE(inside_polygon(vertices, numeric_limits<double>::max(), -numeric_limits<double>::max()));
+    EXPECT_TRUE(inside_polygon(vertices, numeric_limits<double>::max(), numeric_limits<double>::max()));
+    EXPECT_TRUE(inside_polygon(vertices, -numeric_limits<double>::max(), numeric_limits<double>::max()));
 }
 
 int main(int argc, char **argv) {

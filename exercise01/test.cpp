@@ -70,7 +70,6 @@ TEST(IntersectionTestDouble, EdgeCase) {
     EXPECT_FALSE(intersection(xa, ya, xb, yb, xc, yc, xd, yd));
 }
 
-// Aquí va la implementación de la función intersection
 
 TEST(IntersectionTestDouble, ColinearOverlap) {
     double xa = 0.123456789, ya = 0.123456789;

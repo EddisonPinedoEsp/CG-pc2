@@ -1,99 +1,40 @@
-#include <iostream>
 #include <vector>
-#include <cmath>
-#include <algorithm>
-#include <float.h>
-
+#include <limits>
 using namespace std;
 
-// Funcion calcula la distancia entre dos puntos
-double dist(const vector<float>& p1, const vector<float>& p2) {
-    // Usa la fórmula de la distancia entre dos puntos
-    return sqrt((p1[0] - p2[0]) * (p1[0] - p2[0]) +
-                (p1[1] - p2[1]) * (p1[1] - p2[1]));
-}
+template <typename T> 
+vector<int> closest_points(vector<vector<T>> const& points) {
+    int n = points.size();
 
-// Calcula la distancia más pequeña entre dos puntos de un conjunto de puntos
-double segmentoCerca(vector<vector<float>>& segmento, double d, pair<vector<float>, vector<float>>& puntosCerca) {
-    double min = d;
+    double min_distance = numeric_limits<double>::max();
+    vector<int> result(2);
 
-    // Ordena los puntos
-    sort(segmento.begin(), segmento.end(), [](const vector<float>& p1, const vector<float>& p2) {
-        return p1[1] < p2[1];
-    });
+    for (int i = 0; i < n; ++i) {
+        for (int j = i + 1; j < n; ++j) {
+            // Calculamos la distancia al cuadrado entre el punto i y el punto j
+            double dx = points[j][0] - points[i][0];
+            double dy = points[j][1] - points[i][1];
+            double distance_sq = dx * dx + dy * dy;
 
-    // Compara todos los puntos en el segmento
-    for (size_t i = 0; i < segmento.size(); ++i) {
-        for (size_t j = i + 1; j < segmento.size() && (segmento[j][1] - segmento[i][1]) < min; ++j) {
-            double distance = dist(segmento[i], segmento[j]);
-            if (distance < min) {
-                min = distance;
-                puntosCerca = {segmento[i], segmento[j]};
+            // Si encontramos una distancia menor, actualizamos el par de puntos más cercanos
+            if (distance_sq < min_distance) {
+                min_distance = distance_sq;
+                result = {i, j};
             }
         }
     }
 
-    return min;
-}
-
-// Función auxiliar para encontrar la distancia más pequeña entre dos puntos
-double masCerca(vector<vector<float>>& P, size_t n, pair<vector<float>, vector<float>>& puntosCerca) {
-    // Si hay mas de 3 puntos, se resuelve por fuerza bruta
-    if (n <= 3) {
-        double min = DBL_MAX;
-        for (size_t i = 0; i < n; ++i) {
-            for (size_t j = i + 1; j < n; ++j) {
-                double distance = dist(P[i], P[j]);
-                if (distance < min) {
-                    min = distance;
-                    puntosCerca = {P[i], P[j]};
-                }
-            }
-        }
-        return min;
+    if (result[0] > result[1]) {
+        swap(result[0], result[1]);
     }
 
-    // Busca el punto medio
-    size_t mid = n / 2;
-    vector<float> midPoint = P[mid];
-
-    // Encuentra la distancia más pequeña en la mitad izquierda y derecha del conjunto de puntos
-    pair<vector<float>, vector<float>> leftPair, rightPair;
-    double dl = masCerca(P, mid, leftPair);
-    double dr = masCerca(P, n - mid, rightPair);
-
-    // Encuentra la distancia más pequeña entre los puntos de la mitad izquierda y derecha
-    double d = min(dl, dr);
-    puntosCerca = (dl < dr) ? leftPair : rightPair;
-
-    // Crea un segmento de puntos que están a una distancia menor que d del punto medio
-    vector<vector<float>> segmento;
-    for (size_t i = 0; i < n; i++) {
-        if (abs(P[i][0] - midPoint[0]) < d) {
-            segmento.push_back(P[i]);
-        }
-    }
-
-    // Encuentra la distancia más pequeña en el segmento
-    double segmentoDist = segmentoCerca(segmento, d, puntosCerca);
-    if (segmentoDist < d) {
-        d = segmentoDist;
-    }
-
-    return d;
+    return result;
 }
 
-// Función para encontrar la distancia más pequeña entre dos puntos
-pair<vector<float>, vector<float>> cerca(vector<vector<float>>& P) {
-    size_t n = P.size();
-    sort(P.begin(), P.end(), [](const vector<float>& p1, const vector<float>& p2) {
-        return p1[0] < p2[0];
-    });
-
-    pair<vector<float>, vector<float>> puntosCerca;
-    masCerca(P, n, puntosCerca);
-    return puntosCerca;
+vector<int> closest_points(vector<vector<int>> const& points) {
+    return closest_points<int>(points);
 }
 
-
-
+vector<int> closest_points(vector<vector<double>> const& points) {
+    return closest_points<double>(points);
+}

@@ -1,75 +1,79 @@
 #include <gtest/gtest.h>
+#include <limits>
+#include <cmath>
 #include <vector>
 
 using namespace std;
 
-// Mock function to simulate punto_en_triangulo behavior for testing
-bool punto_en_triangulo(const vector<vector<float>>& T, const vector<float>& P);
 
-TEST(PuntoEnTrianguloTest, InsideTriangle) {
-    vector<vector<float>> T = {{0, 0}, {5, 0}, {0, 5}};
-    vector<float> P = {1, 1};
-    EXPECT_TRUE(punto_en_triangulo(T, P));
+bool inside_triangle(vector<vector<int>> const& vertices, int px, int py);
+bool inside_triangle(vector<vector<double>> const& vertices, double px, double py);
+
+TEST(InsideTriangleTestInt, PointInside) {
+    vector<vector<int>> vertices = {{0, 0}, {5, 0}, {0, 5}};
+    EXPECT_TRUE(inside_triangle(vertices, 1, 1));
 }
 
-TEST(PuntoEnTrianguloTest, OnVertex) {
-    vector<vector<float>> T = {{0, 0}, {5, 0}, {0, 5}};
-    vector<float> P = {0, 0};
-    EXPECT_TRUE(punto_en_triangulo(T, P));
+TEST(InsideTriangleTestInt, PointOutside) {
+    vector<vector<int>> vertices = {{0, 0}, {5, 0}, {0, 5}};
+    EXPECT_FALSE(inside_triangle(vertices, 6, 6));
 }
 
-TEST(PuntoEnTrianguloTest, OnEdge) {
-    vector<vector<float>> T = {{0, 0}, {5, 0}, {0, 5}};
-    vector<float> P = {2.5, 0};
-    EXPECT_TRUE(punto_en_triangulo(T, P));
+TEST(InsideTriangleTestInt, PointOnEdge) {
+    vector<vector<int>> vertices = {{0, 0}, {5, 0}, {0, 5}};
+    EXPECT_TRUE(inside_triangle(vertices, 2, 0));
 }
 
-TEST(PuntoEnTrianguloTest, OutsideTriangle) {
-    vector<vector<float>> T = {{0, 0}, {5, 0}, {0, 5}};
-    vector<float> P = {6, 6};
-    EXPECT_FALSE(punto_en_triangulo(T, P));
+TEST(InsideTriangleTestInt, PointAtVertex) {
+    vector<vector<int>> vertices = {{0, 0}, {5, 0}, {0, 5}};
+    EXPECT_TRUE(inside_triangle(vertices, 0, 0));
 }
 
-TEST(PuntoEnTrianguloTest, CollinearPoints) {
-    vector<vector<float>> T = {{0, 0}, {5, 0}, {10, 0}};
-    vector<float> P = {2.5, 0};
-    EXPECT_TRUE(punto_en_triangulo(T, P));
+TEST(InsideTriangleTestInt, LargeCoordinates) {
+    vector<vector<int>> vertices = {
+        {std::numeric_limits<int>::min(), std::numeric_limits<int>::min()},
+        {std::numeric_limits<int>::max(), std::numeric_limits<int>::min()},
+        {0, std::numeric_limits<int>::max()}
+    };
+    EXPECT_TRUE(inside_triangle(vertices, 0, 0));
 }
 
-TEST(PuntoEnTrianguloTest, NegativeCoordinates) {
-    vector<vector<float>> T = {{-5, -5}, {0, 0}, {-5, 0}};
-    vector<float> P = {-3, -2};
-    EXPECT_TRUE(punto_en_triangulo(T, P));
+TEST(InsideTriangleTestDouble, PointInside) {
+    vector<vector<double>> vertices = {{0.0, 0.0}, {5.0, 0.0}, {0.0, 5.0}};
+    EXPECT_TRUE(inside_triangle(vertices, 1.0, 1.0));
 }
 
-TEST(PuntoEnTrianguloTest, CenterOfTriangle) {
-    vector<vector<float>> T = {{0, 0}, {6, 0}, {0, 6}};
-    vector<float> P = {2, 2};
-    EXPECT_TRUE(punto_en_triangulo(T, P));
+TEST(InsideTriangleTestDouble, PointOutside) {
+    vector<vector<double>> vertices = {{0.0, 0.0}, {5.0, 0.0}, {0.0, 5.0}};
+    EXPECT_FALSE(inside_triangle(vertices, 6.0, 6.0));
 }
 
-TEST(PuntoEnTrianguloTest, OnEdgeNotVertex) {
-    vector<vector<float>> T = {{0, 0}, {6, 0}, {0, 6}};
-    vector<float> P = {3, 0};
-    EXPECT_TRUE(punto_en_triangulo(T, P));
+TEST(InsideTriangleTestDouble, PointOnEdge) {
+    vector<vector<double>> vertices = {{0.0, 0.0}, {5.0, 0.0}, {0.0, 5.0}};
+    EXPECT_TRUE(inside_triangle(vertices, 2.5, 0.0));
 }
 
-TEST(PuntoEnTrianguloTest, NearEdgeOutside) {
-    vector<vector<float>> T = {{0, 0}, {6, 0}, {0, 6}};
-    vector<float> P = {6.1, 0};
-    EXPECT_FALSE(punto_en_triangulo(T, P));
+TEST(InsideTriangleTestDouble, PointAtVertex) {
+    vector<vector<double>> vertices = {{0.0, 0.0}, {5.0, 0.0}, {0.0, 5.0}};
+    EXPECT_TRUE(inside_triangle(vertices, 0.0, 0.0));
 }
 
-TEST(PuntoEnTrianguloTest, OnExtendedEdge) {
-    vector<vector<float>> T = {{0, 0}, {6, 0}, {0, 6}};
-    vector<float> P = {7, 0};
-    EXPECT_FALSE(punto_en_triangulo(T, P));
+TEST(InsideTriangleTestDouble, LargeCoordinates) {
+    vector<vector<double>> vertices = {
+        {-1e308, -1e308},
+        {1e308, -1e308},
+        {0.0, 1e308}
+    };
+    EXPECT_TRUE(inside_triangle(vertices, 0.0, 0.0));
 }
 
-TEST(PuntoEnTrianguloTest, FloatingPointPrecision) {
-    vector<vector<float>> T = {{0, 0}, {6, 0}, {0, 6}};
-    vector<float> P = {2.999999, 2.999999};
-    EXPECT_TRUE(punto_en_triangulo(T, P));
+TEST(InsideTriangleTestDouble, SmallCoordinates) {
+    vector<vector<double>> vertices = {
+        {-1.000000001, -1.000000001},
+        {1.000000001, -1.000000001},
+        {0.0, 1.000000001}
+    };
+    EXPECT_TRUE(inside_triangle(vertices, 0.0, 0.0));
 }
 
 int main(int argc, char **argv) {

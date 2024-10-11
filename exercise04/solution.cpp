@@ -1,25 +1,38 @@
-#include<iostream>
-#include<vector>
-#include<cmath>
-
+#include <vector>
+#include <limits>
 using namespace std;
 
-// Función para calcular el área con signo de un triángulo dado por sus vértices
-double signo_area_triangulo(const vector<float>& a, const vector<float>& b, const vector<float>& c) {
-    return (a[0] * b[1] - a[1] * b[0] + a[1] * c[0] - a[0] * c[1] + b[0] * c[1] - c[0] * b[1]) / 2.0;
+template <typename T>
+double signo_area_triangulo(const vector<T>& a, const vector<T>& b, const vector<T>& c) {
+    double area = (static_cast<double>(a[0]) * static_cast<double>(b[1]) 
+                 - static_cast<double>(a[1]) * static_cast<double>(b[0]) 
+                 + static_cast<double>(a[1]) * static_cast<double>(c[0]) 
+                 - static_cast<double>(a[0]) * static_cast<double>(c[1]) 
+                 + static_cast<double>(b[0]) * static_cast<double>(c[1]) 
+                 - static_cast<double>(c[0]) * static_cast<double>(b[1])) / 2.0;
+    return area;
 }
 
-// Función para verificar si los puntos están en sentido horario
-bool sentido_horario(const vector<float>& a, const vector<float>& b, const vector<float>& c) {
+template <typename T>
+bool sentido_horario(const vector<T>& a, const vector<T>& b, const vector<T>& c) {
     const double EPSILON = 1e-9;
     return signo_area_triangulo(a, b, c) < -EPSILON;
 }
 
-// Función para verificar si el punto P está dentro del triángulo T
-bool punto_en_triangulo(const vector<vector<float>>& T, const vector<float>& P) {
+template <typename T>
+bool inside_triangle(const vector<vector<T>>& vertices, T px, T py) {
+    vector<T> P = {px, py};
     // Verifica si el punto P está en el mismo sentido que los vértices del triángulo
-    if (sentido_horario(T[0], T[1], P)) return false;
-    if (sentido_horario(T[1], T[2], P)) return false;
-    if (sentido_horario(T[2], T[0], P)) return false;
+    if (sentido_horario(vertices[0], vertices[1], P)) return false;
+    if (sentido_horario(vertices[1], vertices[2], P)) return false;
+    if (sentido_horario(vertices[2], vertices[0], P)) return false;
     return true;
+}
+
+bool inside_triangle(const vector<vector<int>>& vertices, int px, int py) {
+    return inside_triangle<int>(vertices, px, py);
+}
+
+bool inside_triangle(const vector<vector<double>>& vertices, double px, double py) {
+    return inside_triangle<double>(vertices, px, py);
 }
