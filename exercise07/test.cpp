@@ -1,108 +1,71 @@
 #include <gtest/gtest.h>
 #include <vector>
-#include <iostream>
-#include <tuple>
 
-using namespace std;
+template <typename T>
+bool exist_intersections(const std::vector<std::vector<T>>& segments);
 
-struct Punto {
-    int x, y;
-    bool operator<(const Punto& otro) const {
-        return tie(x, y) < tie(otro.x, otro.y);
-    }
-};
-
-struct Segmento {
-    Punto p1, p2;
-    Segmento(Punto a, Punto b) : p1(a), p2(b) {
-        if (p2 < p1) swap(p1, p2); 
-    }
-};
-
-struct Event {
-    int x;
-    bool esComienso;
-    Segmento* segmento;
-    
-    bool operator<(const Event& otro) const {
-        if (x != otro.x)
-            return x < otro.x;
-        return esComienso > otro.esComienso;
-    }
-};
-
-bool detectarInterseccion(vector<Segmento>& Segmentos);
-
-TEST(DetectIntersectionsTest, NoIntersections) {
-    vector<Segmento> Segmentos = {
-        Segmento({0, 0}, {1, 1}),
-        Segmento({2, 2}, {3, 3})
+TEST(IntersectionTest, NoIntersection) {
+    std::vector<std::vector<int>> segments = {
+        {0, 0, 1, 1},
+        {2, 2, 3, 3}
     };
-    bool result = detectarInterseccion(Segmentos);
-    cout << "NoIntersections: " << (result ? "true" : "false") << endl;
-    EXPECT_FALSE(result);
+    EXPECT_FALSE(exist_intersections(segments));
 }
 
-TEST(DetectIntersectionsTest, OneIntersection) {
-    vector<Segmento> Segmentos = {
-        Segmento({0, 0}, {2, 2}),
-        Segmento({0, 2}, {2, 0})
+TEST(IntersectionTest, OneIntersection) {
+    std::vector<std::vector<int>> segments = {
+        {0, 0, 1, 1},
+        {1, 0, 0, 1}
     };
-    bool result = detectarInterseccion(Segmentos);
-    cout << "OneIntersection: " << (result ? "true" : "false") << endl;
-    EXPECT_TRUE(result);
+    EXPECT_TRUE(exist_intersections(segments));
 }
 
-TEST(DetectIntersectionsTest, MultipleIntersections) {
-    vector<Segmento> segmentos = {
-        Segmento({0, 0}, {3, 3}),
-        Segmento({0, 3}, {3, 0}),
-        Segmento({1, 0}, {1, 3})
+TEST(IntersectionTest, CollinearSegments) {
+    std::vector<std::vector<int>> segments = {
+        {0, 0, 2, 2},
+        {1, 1, 3, 3}
     };
-    bool result = detectarInterseccion(segmentos);
-    cout << "MultipleIntersections: " << (result ? "true" : "false") << endl;
-    EXPECT_TRUE(result);
+    EXPECT_TRUE(exist_intersections(segments));
 }
 
-TEST(DetectIntersectionsTest, CollinearSegmentos) {
-    vector<Segmento> segmentos = {
-        Segmento({0, 0}, {2, 2}),
-        Segmento({1, 1}, {3, 3})
+TEST(IntersectionTest, DoublePrecision) {
+    std::vector<std::vector<double>> segments = {
+        {0.0, 0.0, 1.0, 1.0},
+        {1.0, 0.0, 0.0, 1.0}
     };
-    bool result = detectarInterseccion(segmentos);
-    cout << "CollinearSegmentos: " << (result ? "true" : "false") << endl;
-    EXPECT_TRUE(result);
+    EXPECT_TRUE(exist_intersections(segments));
 }
 
-TEST(DetectIntersectionsTest, TouchingEndPuntos) {
-    vector<Segmento> segmentos = {
-        Segmento({0, 0}, {2, 2}),
-        Segmento({2, 2}, {3, 3})
+TEST(IntersectionTest, IntMaxMin) {
+    std::vector<std::vector<int>> segments = {
+        {std::numeric_limits<int>::min(), std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), std::numeric_limits<int>::max()},
+        {std::numeric_limits<int>::max(), std::numeric_limits<int>::min(), std::numeric_limits<int>::min(), std::numeric_limits<int>::max()}
     };
-    bool result = detectarInterseccion(segmentos);
-    cout << "TouchingEndPuntos: " << (result ? "true" : "false") << endl;
-    EXPECT_TRUE(result);
+    EXPECT_TRUE(exist_intersections(segments));
 }
 
-TEST(DetectIntersectionsTest, ParallelSegmentos) {
-    vector<Segmento> segmentos = {
-        Segmento({0, 0}, {2, 2}),
-        Segmento({0, 1}, {2, 3})
+TEST(IntersectionTest, DoubleMaxMin) {
+    std::vector<std::vector<double>> segments = {
+        {std::numeric_limits<double>::lowest(), std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
+        {std::numeric_limits<double>::max(), std::numeric_limits<double>::lowest(), std::numeric_limits<double>::lowest(), std::numeric_limits<double>::max()}
     };
-    bool result = detectarInterseccion(segmentos);
-    cout << "ParallelSegmentos: " << (result ? "true" : "false") << endl;
-    EXPECT_FALSE(result);
+    EXPECT_TRUE(exist_intersections(segments));
 }
 
-TEST(DetectIntersectionsTest, GivenCase) {
-    vector<Segmento> segmentos = {
-        Segmento({0, 0}, {4, 4}),
-        Segmento({1, 5}, {5, 1}),
-        Segmento({1, 1}, {5, 5})
+TEST(IntersectionTest, IntNoIntersection) {
+    std::vector<std::vector<int>> segments = {
+        {std::numeric_limits<int>::min(), std::numeric_limits<int>::min(), 0, 0},
+        {std::numeric_limits<int>::max(), std::numeric_limits<int>::max(), 1, 1}
     };
-    bool result = detectarInterseccion(segmentos);
-    cout << "GivenCase: " << (result ? "true" : "false") << endl;
-    EXPECT_TRUE(result);
+    EXPECT_FALSE(exist_intersections(segments));
+}
+
+TEST(IntersectionTest, DoubleNoIntersection) {
+    std::vector<std::vector<double>> segments = {
+        {std::numeric_limits<double>::lowest(), std::numeric_limits<double>::lowest(), 0.0, 0.0},
+        {std::numeric_limits<double>::max(), std::numeric_limits<double>::max(), 1.0, 1.0}
+    };
+    EXPECT_FALSE(exist_intersections(segments));
 }
 
 int main(int argc, char **argv) {

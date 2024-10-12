@@ -18,14 +18,14 @@ TEST(DistancePointToLine3DTest, PointOnLine) {
     EXPECT_NEAR(distance_point_to_line_3D(p1x, p1y, p1z, dx, dy, dz, px, py, pz), 0.0, 1e-9);
 }
 
-// TEST(DistancePointToLine3DTest, PointOffLine) {
-//     double p1x = 0.0, p1y = 0.0, p1z = 0.0;
-//     double dx = 1.0, dy = 1.0, dz = 1.0;
-//     double px = 1.0, py = 2.0, pz = 3.0;
-//     double expected_distance = sqrt(2.0 / 3.0);
-//     // EXPECT_NEAR(distance_point_to_line_3D(p1x, p1y, p1z, dx, dy, dz, px, py, pz), expected_distance, 1e-9);
-//     EXPECT_EQ(distance_point_to_line_3D(p1x, p1y, p1z, dx, dy, dz, px, py, pz), 1.41);
-// }
+TEST(DistancePointToLine3DTest, PointOffLine) {
+    double p1x = 0.0, p1y = 0.0, p1z = 0.0;
+    double dx = 1.0, dy = 1.0, dz = 1.0;
+    double px = 1.0, py = 2.0, pz = 3.0;
+    double expected_distance = sqrt(2.0 / 3.0);
+    // EXPECT_NEAR(distance_point_to_line_3D(p1x, p1y, p1z, dx, dy, dz, px, py, pz), expected_distance, 1e-9);
+    EXPECT_EQ(distance_point_to_line_3D(p1x, p1y, p1z, dx, dy, dz, px, py, pz), 1.41);
+}
 
 TEST(DistancePointToLine3DTest, LargeCoordinates) {
     double p1x = 1e9, p1y = 1e9, p1z = 1e9;
