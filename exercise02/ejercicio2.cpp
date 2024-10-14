@@ -3,7 +3,7 @@ using namespace std;
 
 template <typename T>
 int orientacion(T xa, T ya, T xb, T yb, T xc, T yc) {
-    T orienttacion = (yb - ya) * (xc - xb) - (xb - xa) * (yc - yb);
+    long long orienttacion = (yb - ya) * (xc - xb) - (xb - xa) * (yc - yb);
     if (orienttacion == 0) {
         return 0;  // Colineales
     }

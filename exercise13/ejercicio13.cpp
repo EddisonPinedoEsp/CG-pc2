@@ -46,11 +46,10 @@ vector<vector<T>> douglas_peucker(vector<vector<T>> const& vertices, double epsi
     }
 }
 
-vector<vector<double>> douglas_peucker(vector<vector<double>> const& vertices, double epsilon) {
-    return douglas_peucker<double>(vertices, epsilon);
+vector<vector<int>> douglas_peucker(vector<vector<int>> const& vertices, int epsilon) {
+    return douglas_peucker<int>(vertices, epsilon);
 }
 
-int main() {
-
-    return 0;
+vector<vector<double>> douglas_peucker(vector<vector<double>> const& vertices, double epsilon) {
+    return douglas_peucker<double>(vertices, epsilon);
 }

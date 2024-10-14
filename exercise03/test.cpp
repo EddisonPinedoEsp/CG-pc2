@@ -19,12 +19,12 @@ TEST(DistancePointToLine3DTest, PointOnLine) {
 }
 
 TEST(DistancePointToLine3DTest, PointOffLine) {
-    double p1x = 0.0, p1y = 0.0, p1z = 0.0;
-    double dx = 1.0, dy = 1.0, dz = 1.0;
-    double px = 1.0, py = 2.0, pz = 3.0;
+    double p1x = 0.0, p1y = 0.0, p1z = 0.0; // Punto 
+    double dx = 1.0, dy = 1.0, dz = 1.0; // Dirección de la recta
+    double px = 1.0, py = 2.0, pz = 3.0; // Punto
     double expected_distance = sqrt(2.0 / 3.0);
     // EXPECT_NEAR(distance_point_to_line_3D(p1x, p1y, p1z, dx, dy, dz, px, py, pz), expected_distance, 1e-9);
-    EXPECT_EQ(distance_point_to_line_3D(p1x, p1y, p1z, dx, dy, dz, px, py, pz), 1.41);
+    EXPECT_EQ(distance_point_to_line_3D(p1x, p1y, p1z, dx, dy, dz, px, py, pz), 1.4142135623730951);
 }
 
 TEST(DistancePointToLine3DTest, LargeCoordinates) {

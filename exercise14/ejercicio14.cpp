@@ -39,7 +39,7 @@ T max_triangle_angle(const vector<T>& p1, const vector<T>& p2, const vector<T>& 
 template <typename T>
 vector<vector<T>> triangles_based_simplification(vector<vector<T>> const& vertices, int N) {
     int original_size = vertices.size();
-    if (N >= original_size) return vertices; // No simplificar si N es mayor o igual al número de vértices
+    if (N >= original_size) return vertices;
 
     vector<vector<T>> simplified_vertices = vertices;
 
@@ -74,31 +74,11 @@ vector<vector<T>> triangles_based_simplification(vector<vector<T>> const& vertic
     return simplified_vertices;
 }
 
-int main() {
-    vector<vector<double>> puntos = {
-        {0.0, 0.0},
-        {1.0, 1.0},    
-        {2.0, 2.0},     
-        {3.0, 1.0},
-        {4.0, 0.5},    
-        {5.0, 0.0},     
-        {6.0, 0.2},
-        {7.0, 0.4},
-        {8.0, 0.2},     
-        {9.0, 0.0},     
-        {10.0, 0.0},    
-        {11.0, -0.5},
-        {12.0, -1.0},   
-        {13.0, -0.5},  
-        {14.0, 0.0}
-    };
-
-    int k = 5;
-
-    vector<vector<double>> simplified_points = triangles_based_simplification(puntos, k);
-
-    cout << "Puntos originales: " << puntos.size() << endl;
-    cout << "Puntos simplificados: " << simplified_points.size() << endl;
-
-    return 0;
+vector<vector<int>> triangles_based_simplification(vector<vector<int>> const& vertices, int N) {
+    return triangles_based_simplification<int>(vertices, N);
 }
+
+vector<vector<double>> triangles_based_simplification(vector<vector<double>> const& vertices, int N) {
+    return triangles_based_simplification<double>(vertices, N);
+}
+

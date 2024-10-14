@@ -4,7 +4,7 @@ using namespace std;
 
 template <typename T>
 int orientacion(T px, T py, T qx, T qy, T rx, T ry) {
-    T val = (qy - py) * (rx - qx) - (qx - px) * (ry - qy);
+    long long val = (qy - py) * (rx - qx) - (qx - px) * (ry - qy);
     if (val == 0) return 0;  // colinear
     return (val > 0) ? 1 : 2; // horario o antihorario
 }

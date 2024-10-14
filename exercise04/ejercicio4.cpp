@@ -3,8 +3,8 @@
 using namespace std;
 
 template <typename T>
-double signo_area_triangulo(const vector<T>& a, const vector<T>& b, const vector<T>& c) {
-    double area = (static_cast<double>(a[0]) * static_cast<double>(b[1]) 
+long double signo_area_triangulo(const vector<T>& a, const vector<T>& b, const vector<T>& c) {
+    long double area = (static_cast<double>(a[0]) * static_cast<double>(b[1]) 
                  - static_cast<double>(a[1]) * static_cast<double>(b[0]) 
                  + static_cast<double>(a[1]) * static_cast<double>(c[0]) 
                  - static_cast<double>(a[0]) * static_cast<double>(c[1]) 

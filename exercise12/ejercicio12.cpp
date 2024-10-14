@@ -3,18 +3,19 @@
 #include<algorithm>
 #include<cmath>
 
-
 using namespace std;
 
-int orientacion(float xa, float ya, float xb, float yb, float xc, float yc) {
-    float orientation = (yb - ya) * (xc - xb) - (xb - xa) * (yc - yb);
+template <typename T>
+int orientacion(T xa, T ya, T xb, T yb, T xc, T yc) {
+    T orientation = (yb - ya) * (xc - xb) - (xb - xa) * (yc - yb);
     if (orientation == 0) {
         return 0;
     }
     return (orientation > 0) ? 1 : 2;
 }
 
-bool esConvexo(const vector<vector<float>>& poligono) {
+template <typename T>
+bool esConvexo(const vector<vector<T>>& poligono) {
     if (poligono.size() < 3) {
         return false;
     }
@@ -23,9 +24,9 @@ bool esConvexo(const vector<vector<float>>& poligono) {
     int primera_orientacion = -1; 
 
     for (int i = 0; i < n; i++) {
-        vector<float> A = poligono[i];
-        vector<float> B = poligono[(i + 1) % n];
-        vector<float> C = poligono[(i + 2) % n];
+        vector<T> A = poligono[i];
+        vector<T> B = poligono[(i + 1) % n];
+        vector<T> C = poligono[(i + 2) % n];
 
         int orient = orientacion(A[0], A[1], B[0], B[1], C[0], C[1]);
 
@@ -41,7 +42,8 @@ bool esConvexo(const vector<vector<float>>& poligono) {
     return true;
 }
 
-bool punto_en_poligono(const vector<vector<float>>& P, const vector<float>& A) {
+template <typename T>
+bool punto_en_poligono(const vector<vector<T>>& P, const vector<T>& A) {
     int n = P.size();
     bool inside = false;
     for (int i = 0, j = n - 1; i < n; j = i++) {
@@ -53,11 +55,12 @@ bool punto_en_poligono(const vector<vector<float>>& P, const vector<float>& A) {
     return inside;
 }
 
-vector<vector<float>> jarvis_march(vector<vector<float>> puntos) {
+template <typename T>
+vector<vector<T>> jarvis_march(vector<vector<T>> puntos) {
     int n = puntos.size();
     if (n < 3) return {};
 
-    vector<vector<float>> hull;
+    vector<vector<T>> hull;
 
     int masInquierda = 0;
     for (int i = 1; i < n; i++) {
@@ -68,45 +71,40 @@ vector<vector<float>> jarvis_march(vector<vector<float>> puntos) {
 
     int p = masInquierda, q;
     do {
-        // Añade el punto actual a la envolvente
         hull.push_back(puntos[p]);
 
-        // Encuentra el punto más "a la izquierda" de todos los demás con respecto a p
         q = (p + 1) % n;
         for (int i = 0; i < n; i++) {
-            if (orientacion(puntos[p][0], puntos[p][1], puntos[i][0], puntos[i][1],puntos[q][0], puntos[q][1]) == 2) {
+            if (orientacion(puntos[p][0], puntos[p][1], puntos[i][0], puntos[i][1], puntos[q][0], puntos[q][1]) == 2) {
                 q = i;
             }
         }
 
-        // Mueve al siguiente punto
         p = q;
 
-    } while (p != masInquierda);  // Se detiene cuando volvemos al punto inicial
+    } while (p != masInquierda);  
 
     return hull;
 }
 
-// Función que calcula el punto de intersección entre dos segmentos si existe
-bool interseccion(const vector<float>& A, const vector<float>& B, const vector<float>& C, const vector<float>& D, vector<float>& intersec) {
-    float a1 = B[1] - A[1];
-    float b1 = A[0] - B[0];
-    float c1 = a1 * A[0] + b1 * A[1];
+template <typename T>
+bool interseccion(const vector<T>& A, const vector<T>& B, const vector<T>& C, const vector<T>& D, vector<T>& intersec) {
+    T a1 = B[1] - A[1];
+    T b1 = A[0] - B[0];
+    T c1 = a1 * A[0] + b1 * A[1];
 
-    float a2 = D[1] - C[1];
-    float b2 = C[0] - D[0];
-    float c2 = a2 * C[0] + b2 * C[1];
+    T a2 = D[1] - C[1];
+    T b2 = C[0] - D[0];
+    T c2 = a2 * C[0] + b2 * C[1];
 
-    float det = a1 * b2 - a2 * b1;
+    T det = a1 * b2 - a2 * b1;
 
-    // fabs(): devuelve el valor absoluto de un número
     if (fabs(det) < 1e-10) {
         return false;
     } else {
         intersec[0] = (b2 * c1 - b1 * c2) / det;
         intersec[1] = (a1 * c2 - a2 * c1) / det;
 
-        // Verificamos que la intersección esté en ambos segmentos
         if (min(A[0], B[0]) <= intersec[0] && intersec[0] <= max(A[0], B[0]) &&
             min(A[1], B[1]) <= intersec[1] && intersec[1] <= max(A[1], B[1]) &&
             min(C[0], D[0]) <= intersec[0] && intersec[0] <= max(C[0], D[0]) &&
@@ -118,57 +116,52 @@ bool interseccion(const vector<float>& A, const vector<float>& B, const vector<f
     return false;
 }
 
-// Función principal que calcula los puntos en la intersección de dos polígonos convexos
-vector<vector<float>> puntos_de_interseccion(vector<vector<float>> poligono1, vector<vector<float>> poligono2) {
-    vector<vector<float>> inter_puntos;
+template <typename T>
+vector<vector<T>> puntos_de_interseccion(vector<vector<T>> poligono1, vector<vector<T>> poligono2) {
+    vector<vector<T>> inter_puntos;
 
     if (poligono1.size() < 3 || poligono2.size() < 3) {
-        return inter_puntos;  // No hay intersección si hay menos de 3 puntos
+        return inter_puntos;
     }
 
-    // Verifica si los polígonos son convexos
     if (!esConvexo(poligono1) || !esConvexo(poligono2)) {
         cout << "One of the poligonos is not convex" << endl;
         return {};
     }
 
-    // Verifica intersecciones de los lados de los polígonos
     for (int i = 0; i < poligono1.size(); i++) {
-        vector<float> A = poligono1[i];
-        vector<float> B = poligono1[(i + 1) % poligono1.size()];
+        vector<T> A = poligono1[i];
+        vector<T> B = poligono1[(i + 1) % poligono1.size()];
 
         for (int j = 0; j < poligono2.size(); j++) {
-            vector<float> C = poligono2[j];
-            vector<float> D = poligono2[(j + 1) % poligono2.size()];
+            vector<T> C = poligono2[j];
+            vector<T> D = poligono2[(j + 1) % poligono2.size()];
 
-            vector<float> intersec(2);
+            vector<T> intersec(2);
             if (interseccion(A, B, C, D, intersec)) {
                 inter_puntos.push_back(intersec);
             }
         }
     }
 
-    // Añade puntos del polígono 1 dentro del polígono 2
     for (auto& punto : poligono1) {
         if (punto_en_poligono(poligono2, punto)) {
             inter_puntos.push_back(punto);
         }
     }
 
-    // Añade puntos del polígono 2 dentro del polígono 1
     for (auto& punto : poligono2) {
         if (punto_en_poligono(poligono1, punto)) {
             inter_puntos.push_back(punto);
         }
     }
 
-    // Convierte los puntos a una envolvente convexa
     return jarvis_march(inter_puntos);
 }
 
-// Función para calcular el área de un polígono dado sus puntos (Fórmula de Shoelace)
-float calcular_area(const vector<vector<float>>& poligono) {
-    float area = 0;
+template <typename T>
+double calcular_area(const vector<vector<T>>& poligono) {
+    double area = 0;
     int n = poligono.size();
 
     for (int i = 0; i < n; i++) {
@@ -177,4 +170,18 @@ float calcular_area(const vector<vector<float>>& poligono) {
     }
 
     return fabs(area) / 2.0;
+}
+
+template <typename T>
+double area_of_intersection(vector<vector<T>> const& vertices1, vector<vector<T>> const& vertices2) {
+    vector<vector<T>> interseccion_poligono = puntos_de_interseccion(vertices1, vertices2);
+    return calcular_area(interseccion_poligono);
+}
+
+double area_of_intersection(vector<vector<int>> const& vertices1, vector<vector<int>> const& vertices2) {
+    return area_of_intersection<int>(vertices1, vertices2);
+}
+
+double area_of_intersection(vector<vector<double>> const& vertices1, vector<vector<double>> const& vertices2) {
+    return area_of_intersection<double>(vertices1, vertices2);
 }
